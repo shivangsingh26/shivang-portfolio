@@ -1,0 +1,61 @@
+{
+  "name": "shivang-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.78",
+    "@ai-sdk/openai": "^3.0.64",
+    "@ai-sdk/react": "^3.0.187",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
+    "ai": "^6.0.185",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cobe": "^2.0.1",
+    "gray-matter": "^4.0.3",
+    "lenis": "^1.1.13",
+    "lucide-react": "^0.469.0",
+    "motion": "^11.15.0",
+    "next": "15.1.4",
+    "next-themes": "^0.4.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
+    "reading-time": "^1.5.0",
+    "rehype-pretty-code": "^0.14.3",
+    "remark-gfm": "^4.0.1",
+    "shiki": "^4.1.0",
+    "sonner": "^1.7.1",
+    "tailwind-merge": "^2.5.5",
+    "three": "^0.171.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0-beta.7",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.6",
+    "@types/react-dom": "^19.0.3",
+    "@types/three": "^0.171.0",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "15.1.4",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^4.0.0-beta.7",
+    "tw-animate-css": "^1.2.5",
+    "typescript": "^5.7.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp",
+      "unrs-resolver"
+    ]
+  }
+}
