@@ -1,9 +1,30 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import type { ReactNode } from "react";
+
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+function getText(children: ReactNode): string {
+  if (typeof children === "string") return children;
+  if (typeof children === "number") return String(children);
+  if (Array.isArray(children)) return children.map(getText).join("");
+  if (children && typeof children === "object" && "props" in children) {
+    const props = (children as { props?: { children?: ReactNode } }).props;
+    return props?.children ? getText(props.children) : "";
+  }
+  return "";
+}
 
 /**
  * Server-rendered markdown for blog posts.
- * Tailwind typography-ish styling via direct utilities to stay framework-light.
+ * Auto-assigns id slugs to headings so TOC can link.
  */
 export function Markdown({ content }: { content: string }) {
   return (
@@ -12,17 +33,17 @@ export function Markdown({ content }: { content: string }) {
         remarkPlugins={[remarkGfm]}
         components={{
           h1: ({ children }) => (
-            <h1 className="mb-6 mt-12 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            <h1 id={slugify(getText(children))} className="mb-6 mt-12 scroll-mt-28 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="mb-5 mt-12 font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+            <h2 id={slugify(getText(children))} className="mb-5 mt-12 scroll-mt-28 font-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 className="mb-4 mt-10 font-display text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+            <h3 id={slugify(getText(children))} className="mb-4 mt-10 scroll-mt-28 font-display text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
               {children}
             </h3>
           ),

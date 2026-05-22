@@ -115,6 +115,35 @@ export function ChatWidget({
     onError: () => {},
   });
   const scrollRef = useRef<HTMLDivElement>(null);
+  const hydratedRef = useRef(false);
+
+  // Restore history on first mount
+  useEffect(() => {
+    if (hydratedRef.current) return;
+    hydratedRef.current = true;
+    try {
+      const raw = localStorage.getItem("shivang.chat.history");
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (Array.isArray(saved) && saved.length > 0) setMessages(saved);
+      }
+    } catch {
+      // ignore
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persist on every change
+  useEffect(() => {
+    if (!hydratedRef.current) return;
+    try {
+      // cap at 40 messages to avoid localStorage bloat
+      const trimmed = messages.slice(-40);
+      localStorage.setItem("shivang.chat.history", JSON.stringify(trimmed));
+    } catch {
+      // ignore quota errors
+    }
+  }, [messages]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });

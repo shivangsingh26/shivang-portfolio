@@ -28,7 +28,30 @@ export default async function AdminStats({
   const last7d = log.filter(
     (e) => Date.now() - new Date(e.ts).getTime() < 7 * 24 * 60 * 60 * 1000
   ).length;
+  const last24h = log.filter(
+    (e) => Date.now() - new Date(e.ts).getTime() < 24 * 60 * 60 * 1000
+  ).length;
   const unique = new Set(log.map((e) => e.ip ?? "anon")).size;
+  const avgLen = total > 0
+    ? Math.round(log.reduce((acc, e) => acc + e.question.length, 0) / total)
+    : 0;
+
+  // Top question keywords (cheap n-gram count)
+  const stopwords = new Set([
+    "the","a","an","is","are","was","were","be","being","been","to","of","in","on","at","for","with","and","or","but","what","how","why","when","where","who","which","do","does","did","you","your","my","i","me","this","that","it","its","about","tell","can","could","would","should","just","really",
+  ]);
+  const wordCounts: Record<string, number> = {};
+  for (const e of log) {
+    const words = e.question
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, " ")
+      .split(/\s+/)
+      .filter((w) => w.length >= 3 && !stopwords.has(w));
+    for (const w of words) wordCounts[w] = (wordCounts[w] ?? 0) + 1;
+  }
+  const topKeywords = Object.entries(wordCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10);
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-16 sm:px-6">
@@ -48,11 +71,42 @@ export default async function AdminStats({
         (vercel.com/[org]/[project]/analytics).
       </p>
 
-      <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <Stat label="Total questions" value={String(total)} accent="var(--primary)" />
+        <Stat label="Last 24h" value={String(last24h)} accent="var(--coral)" />
         <Stat label="Last 7 days" value={String(last7d)} accent="var(--violet)" />
-        <Stat label="Unique visitors" value={String(unique)} accent="var(--coral)" />
+        <Stat label="Unique IPs" value={String(unique)} accent="var(--teal)" />
       </div>
+
+      {topKeywords.length > 0 && (
+        <div className="mt-10 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur">
+          <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+            Top question keywords
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {topKeywords.map(([word, count]) => {
+              const maxCount = topKeywords[0][1];
+              const intensity = count / maxCount;
+              return (
+                <span
+                  key={word}
+                  className="rounded-full border px-3 py-1 font-mono text-xs"
+                  style={{
+                    borderColor: `oklch(0.66 0.18 254 / ${0.2 + intensity * 0.5})`,
+                    background: `oklch(0.66 0.18 254 / ${intensity * 0.15})`,
+                    color: `oklch(${0.7 + intensity * 0.25} 0.18 254)`,
+                  }}
+                >
+                  {word} <span className="text-muted-foreground/70">×{count}</span>
+                </span>
+              );
+            })}
+          </div>
+          <div className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+            Avg question length: {avgLen} chars
+          </div>
+        </div>
+      )}
 
       <div className="mt-12">
         <div className="flex items-center justify-between">

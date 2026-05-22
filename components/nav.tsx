@@ -7,6 +7,7 @@ import { Menu, X, Search } from "lucide-react";
 import { navLinks, profile } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { dispatchOpenPalette } from "@/lib/events";
+import { dispatchOpenResume } from "@/components/resume-modal";
 import { track } from "@/lib/telemetry";
 
 export function Nav() {
@@ -114,16 +115,25 @@ export function Nav() {
             >
               Blog
             </Link>
-            <a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noreferrer"
+            <Link
+              href="/now"
               data-cursor="hover"
-              onClick={() => track("resume_download", { location: "nav" })}
+              onClick={() => track("cta_click", { target: "now", location: "nav" })}
+              className="hidden rounded-full px-3 py-1.5 text-xs font-medium tracking-tight text-muted-foreground transition hover:text-foreground lg:inline-flex"
+            >
+              Now
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                track("resume_download", { location: "nav_modal" });
+                dispatchOpenResume();
+              }}
+              data-cursor="hover"
               className="hidden rounded-full border border-border bg-foreground/5 px-3 py-1.5 text-xs font-medium tracking-tight transition hover:border-primary/50 hover:text-primary md:inline-flex"
             >
               Resume ↗
-            </a>
+            </button>
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
@@ -163,14 +173,23 @@ export function Nav() {
               >
                 Blog
               </Link>
-              <a
-                href="/resume.pdf"
-                target="_blank"
-                rel="noreferrer"
-                className="mt-1 rounded-lg border border-border px-3 py-2 text-sm font-medium"
+              <Link
+                href="/now"
+                onClick={() => setOpen(false)}
+                className="rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+              >
+                Now
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  dispatchOpenResume();
+                }}
+                className="mt-1 rounded-lg border border-border px-3 py-2 text-left text-sm font-medium"
               >
                 Resume ↗
-              </a>
+              </button>
             </nav>
           </motion.div>
         )}

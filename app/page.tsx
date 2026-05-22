@@ -8,6 +8,7 @@ import { GitHubSection } from "@/components/sections/github";
 import { Contact } from "@/components/sections/contact";
 import { Marquee } from "@/components/marquee";
 import { Bento } from "@/components/sections/bento";
+import { Testimonials } from "@/components/sections/testimonials";
 import { LatestBlog } from "@/components/sections/latest-blog";
 import { SectionRail } from "@/components/section-rail";
 import { ChatRoot } from "@/components/chat/chat-root";
@@ -24,6 +25,7 @@ export default function Page() {
       <Experience />
       <Projects />
       <Skills />
+      <Testimonials />
       <GitHubSection />
       <LatestBlog />
       <Contact />
