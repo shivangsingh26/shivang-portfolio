@@ -26,7 +26,10 @@ export function Globe({ size = 600 }: Props) {
     window.addEventListener("resize", onResize);
     onResize();
 
-    const globe = createGlobe(canvas, {
+    // Cobe v2 types omit `onRender` from COBEOptions even though the runtime
+    // supports it. Cast to bypass the strict type check.
+    type CobeOpts = Parameters<typeof createGlobe>[1];
+    const options = {
       devicePixelRatio: Math.min(window.devicePixelRatio, 2),
       width: width * 2,
       height: width * 2,
@@ -50,13 +53,14 @@ export function Globe({ size = 600 }: Props) {
         { location: [-33.8688, 151.2093], size: 0.04 }, // Sydney
         { location: [25.276, 55.2962], size: 0.04 }, // Dubai
       ],
-      onRender: (state) => {
+      onRender: (state: { phi: number; width: number; height: number }) => {
         if (!pointerRef.current.down) phiRef.current += 0.0035;
         state.phi = phiRef.current + pointerRef.current.dx * 0.01;
         state.width = width * 2;
         state.height = width * 2;
       },
-    });
+    } as unknown as CobeOpts;
+    const globe = createGlobe(canvas, options);
 
     setTimeout(() => {
       if (canvas) canvas.style.opacity = "1";
