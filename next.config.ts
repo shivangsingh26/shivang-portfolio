@@ -9,9 +9,6 @@ const config: NextConfig = {
       { protocol: "https", hostname: "github-contributions-api.jogruber.de" },
     ],
   },
-  experimental: {
-    optimizePackageImports: ["lucide-react", "motion", "@react-three/drei"],
-  },
 };
 
 export default config;
