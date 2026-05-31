@@ -4,11 +4,11 @@ import { About } from "@/components/sections/about";
 import { Experience } from "@/components/sections/experience";
 import { Projects } from "@/components/sections/projects";
 import { Skills } from "@/components/sections/skills";
-import { GitHubSection } from "@/components/sections/github";
+// import { GitHubSection } from "@/components/sections/github";
 import { Contact } from "@/components/sections/contact";
 import { Marquee } from "@/components/marquee";
 import { Bento } from "@/components/sections/bento";
-import { Testimonials } from "@/components/sections/testimonials";
+// import { Testimonials } from "@/components/sections/testimonials";
 import { LatestBlog } from "@/components/sections/latest-blog";
 import { AIConcierge } from "@/components/sections/ai-concierge";
 import { SectionRail } from "@/components/section-rail";
@@ -31,8 +31,8 @@ export default function Page() {
       <Skills />
       <SectionDivider glyph="✦" />
       <AIConcierge />
-      <Testimonials />
-      <GitHubSection />
+      {/* <Testimonials /> */}
+      {/* <GitHubSection /> */}
       <LatestBlog />
       <Contact />
       <ChatRoot />
