@@ -1,103 +1,175 @@
 ---
-title: "Designing Dossier: A 7-Agent Job-Search Pipeline That Costs $0.06 per Application"
-date: "2026-04-22"
-excerpt: "I built an autonomous agentic system that researches companies, scores roles, finds referrals, and writes tailored resumes — for less than a coffee. Here's the architecture."
-tags: ["agents", "llm", "side-project", "dossier"]
+title: "Dossier: An 8-Agent Job-Search Pipeline That Survives Production at ~$0.04 per Run"
+date: "2026-05-22"
+excerpt: "Why I stopped building a job board and started building a quality-first agentic pipeline. The architecture, the cost discipline, and the SaaS layer I wrapped around it."
+tags: ["agents", "llm", "side-project", "dossier", "saas"]
 ---
 
-I built Dossier because the modern job search is a manual disaster. Search aggregators surface noise. Custom resumes take an hour each. "Find a referral" usually means scrolling LinkedIn until your eyes blur.
+The modern job search is a quantity game. Tools optimize for *more* — more applications, more matches, more boards. The result is a perfect machine for generating noise.
 
-So I asked: what if the entire pipeline — discovery, research, scoring, resume tailoring, referral hunting — could run autonomously, end-to-end, for cents per application?
+I wanted the opposite. Dossier is built on a single thesis: **send 10 targeted applications with full context on each company, and get 5 responses.** It's a quality-first agentic pipeline that finds, scores, researches, and surfaces the roles most worth your time — wrapped in a multi-user SaaS so anyone can onboard and run their own pipeline from a browser.
 
-The answer is Dossier. It's a 7-agent system. Each application costs around $0.06 in API spend. End-to-end prep time dropped from hours to under 2 minutes.
+This post is the design diary. What's in it, why it works, and what I'd build differently from scratch.
 
-This post is about the design decisions.
+## The 8 agents
 
-## The 7 agents
+Eight agents working together. Each one is independently useful. All live in `sdk/dossier_sdk/agents/` and are **domain-aware** — the same agent code serves ML/AI, SDE, and Data Science profiles based on `profile.role_domain`.
+
+| Agent | What it does | Cost / run |
+|---|---|---|
+| **Persona Builder** | Resume + LinkedIn PDF parse → questionnaire → 13-question quiz → LLM synthesis into `profile.json` (schema v2) | ~$0 |
+| **Job Discovery** | Multi-source keyword search (Indeed + LinkedIn). Pre-filter drops ~60% before any LLM call. Parallel score against the user's `role_domain` | ~$0.04 |
+| **Watchlist Agent** | Company-specific fetch across **79 hand-picked companies** via LinkedIn `f_C=`, Greenhouse, Lever. Catches promoted listings keyword search never surfaces. | ~$0.01 |
+| **Company Intel** | For every job scoring ≥ 7/10: Tavily + Wikipedia + GPT-5.4-mini → structured `intel.json` (funding, headcount, ML focus, risk flags) | ~$0.02/job |
+| **Gap Analysis** | Semantic skill extraction across all accumulated JDs. Not keyword matching — reasons about capability equivalence | ~$0.73 one-time |
+| **Market Intel** | Monitors YourStory / Inc42 / TechCrunch for new AI/ML funding rounds. Routes companies to watchlist or cold outreach. | ~$0.01 |
+| **Resume Agent** | 3-pass self-evaluation: Sonnet tailor → Haiku critic → Sonnet revise. ATS keyword mirroring + hallucination guard enforced. | ~$0.08–0.14/app |
+| **Referral Finder** | 3-tier contact search: warm LinkedIn → cold Tavily → personalised LLM cold message. Confidence-scored, seniority-aware. | ~$0.02/job |
+
+A daily run currently costs around **$0.04 total** on the keyword-discovery stage, with company intel + resume tailoring on demand for jobs you actually like.
+
+The key insight: **most agents don't need a frontier model.** Discovery and filtering use GPT-5.4-mini. Reasoning and writing use Claude Sonnet 4.6. The cost curve is a step function, not a smooth slope.
+
+## Cost discipline: pre-filter drops ~60% before any LLM token
+
+The naive version called the LLM on every job pulled from Indeed/LinkedIn. That's ~550 calls per run. Most are non-starters — wrong seniority, wrong location, service companies, off-domain titles.
+
+So I added a **rule-based pre-filter** between discovery and scoring. It's a hundred lines of Python checking, in cost order:
 
 ```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│ Job Discovery   │ ──▶ │ Watchlist       │ ──▶ │ Company Intel   │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-                                                         │
-┌─────────────────┐     ┌─────────────────┐     ┌────────▼────────┐
-│ Referral Finder │ ◀── │ Resume Agent    │ ◀── │ Gap Analysis    │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-                                ▲
-                        ┌───────┴───────┐
-                        │ Market Intel  │
-                        └───────────────┘
+is_hard_no()              ← service cos (TCS · Infosys · NTT DATA · Happiest Minds...)
+                            IT staffing, job aggregators
+description < 100 chars   ← no content = no signal
+is_seniority_mismatch()   ← profile-driven: Senior · Staff · VP · Intern
+classify_job_function()   ← domain-aware: ML/DS titles → off_domain for SDE users (0 pts)
+                            SDE/backend titles → off_domain for ML users
+                            support_ops (SRE / DevOps / pure Infra) → cap at 3
+extract_years_required()  ← > exp_band max → hard reject
+extract_degree_required() ← PhD → hard reject · Masters → soft penalty
+is_job_seen(url)          ← per-user SQLite dedup → skip
 ```
 
-Each agent has one job:
+Result: ~60% of raw jobs eliminated before they cost an API call. **Cost per run dropped from ~$0.10 to ~$0.04** without any quality loss.
 
-| Agent | Input | Output | Model |
-|-------|-------|--------|-------|
-| Job Discovery | Search criteria | Raw job list (~550/run) | Tavily + GPT-5.4-mini |
-| Watchlist | Raw jobs | Filtered candidates | Rule-based, no LLM |
-| Company Intel | Company name | Funding, team, vibe | GPT-5 + Tavily |
-| Market Intel | Role title | Salary range, demand | GPT-5.4-mini |
-| Gap Analysis | JD + candidate | Skill gaps, fit score | Claude Haiku 4.5 |
-| Resume Agent | JD + candidate + gaps | Tailored LaTeX resume | Claude Sonnet 4.6 (3-pass) |
-| Referral Finder | Company + candidate | Warm intros | Tiered (see below) |
+> The principle: LLMs are expensive lookup tables. If a rule can answer the question, use the rule.
 
-The key insight: **most agents don't need a frontier model.** Discovery and filtering use cheap models. Reasoning and writing use expensive ones. The cost curve is a step function, not a smooth slope.
+## Domain-aware scoring: same agent, three personas
 
-## Cost discipline: pre-LLM filters cut 65% of API calls
+`build_scoring_system_prompt` is generic. It reads `target.roles` and `role_domain` from the user's profile and assembles a domain-specific prompt at runtime. The same `score_job` function serves:
 
-The naive version of Dossier called the LLM on every job pulled from Tavily. That's ~550 calls per run. Most of those jobs are non-starters — wrong location, wrong seniority, wrong stack.
+| Profile | `role_domain` | Targeted titles | Off-domain titles |
+|---|---|---|---|
+| Shivang, Krishna | `ml_ai` | ML Engineer, AI Engineer, Data Scientist, LLM Engineer | SDE, Backend, Frontend |
+| Anushthan | `sde` | Backend Engineer, SDE-1, Software Engineer | ML Engineer, Data Scientist |
+| (future) | `data` | Analytics Engineer, Data Engineer, BI | ML Engineer, SDE |
 
-So I added a **rule-based filter** between Discovery and Watchlist. It's a hundred lines of Python checking:
+Experience derives from `full_time_months` (with `intern_months` fallback). The switch_months countdown computes from `target.target_by` — no hardcoded dates.
 
-- Location matches candidate preferences
-- Title contains a keyword from a permissive synonym list
-- Posted date < 14 days
-- Company isn't on a blocklist (recruiting agencies, contract shops)
+The benefit: **one codebase, many users.** Adding a new role domain is a 30-line addition to the prompt builder, not a fork.
 
-Result: roughly 65% of jobs are eliminated before they cost an API call. Cost per application dropped from ~$0.17 to ~$0.06 without any quality loss.
+## Semantic gap analysis — how the matching works
 
-> **The principle:** LLMs are expensive lookup tables. If a rule can answer the question, use the rule.
+The gap agent doesn't keyword-match. It sends your full profile summary alongside every JD and asks the LLM to reason about capability equivalence.
+
+```
+JD says "PyTorch"
+  + profile has "Computer Vision [can_architect]: YOLO, RF-DETR, MobileNetV2"
+  → candidate HAS PyTorch  ✓  (domain at architect depth implies the core framework)
+
+JD says "RAG"
+  + profile has "RAG Systems [can_architect]: LlamaIndex, LangChain, ChromaDB, FAISS"
+  → candidate HAS RAG  ✓  (exact alias match)
+
+JD says "SQL"
+  + profile has no SQL alias anywhere
+  → candidate MISSING SQL  ✗  (never inferred from Python/ML background alone)
+```
+
+Six categories per JD: `technical` · `tools_platforms` · `domain` · `research_methods` · `behavioral` · `certifications`.
+
+Each job gets a `gap.json` with `candidate_has_required` and `candidate_missing_required` lists. The resume agent reads these to decide which bullets to lead with.
+
+**Current market signal across 193 JDs:**
+
+| Required gap | % of JDs | | Strong match | % of JDs |
+|---|---|---|---|---|
+| SQL | 42% | | Python | 79% |
+| Cross-functional collab | 38% | | AWS | 37% |
+| NLP (domain) | 24% | | RAG | 27% |
+| TensorFlow | 22% | | GCP | 21% |
+
+The market is telling me what to learn next. That's the agent's real product.
 
 ## The Resume Agent's 3-pass self-eval
 
-The Resume Agent is the only place I spend on Claude Sonnet 4.6. It runs in three passes:
+The most expensive call in the pipeline. Runs three sequential LLM passes:
 
-1. **Tailor pass.** Given JD + candidate JSON, generate a LaTeX resume. Strict prompt: no fabrication, mirror JD keywords, keep within one page.
-2. **Critique pass.** A second prompt evaluates the resume against the JD, looking for missing keywords, vague bullets, or anything that smells fabricated.
-3. **Revise pass.** Take the critique and produce a final resume.
+1. **Tailor pass** (Claude Sonnet 4.6) — given gap.json + profile + JD, generate a tailored LaTeX resume. 10 hard rules: no fabrication, ATS keywords mirrored, `candidate_has_required` leads, hidden skills hidden.
+2. **Critique pass** (Claude Haiku 4.5) — cheaper model audits the resume against 4 checks: keyword mirroring, hallucination, LaTeX validity, bullet ordering.
+3. **Revise pass** (Sonnet again, only if critic fails any check) — surgical fix on the specific issue. Max 1 revise loop.
 
-The critique pass catches things the tailor pass routinely misses — generic action verbs ("worked on", "responsible for"), absent ATS keywords, bullet ordering. It's the difference between resumes that read like an LLM wrote them and resumes that read like a human did.
+Cost: $0.08 if the tailor passes audit on first try, $0.14 if it needs the revise. Average ~$0.10/application.
 
-Total cost: ~3,200 input tokens + ~1,800 output tokens per resume. Roughly $0.04. The other $0.02 is everything else combined.
+The critique pass catches things the tailor pass routinely misses — generic action verbs, absent ATS keywords, bullet ordering against the gap signal. It's the difference between resumes that read like an LLM wrote them and resumes that read like a human did.
 
-## Referral Finder's tiered strategy
+## The watchlist — why company-specific beats keyword search
 
-This was the agent I spent the most design time on, because warm intros are the hardest signal to extract from public data.
+Keyword search returns jobs that LinkedIn and Indeed want to show you. Company-specific `f_C=` search returns **every current opening** at that company, including promoted listings, internal transfers, and roles posted without common ML keywords.
 
-It runs three tiers:
+```
+Greenhouse API    boards-api.greenhouse.io/v1/boards/{token}/jobs   (free JSON)
+Lever API         api.lever.co/v0/postings/{handle}?mode=json        (free JSON)
+LinkedIn f_C=     company-specific search with numeric ID filter
+```
 
-**Tier 1 — Warm LinkedIn connections.** Read the candidate's exported LinkedIn graph. Filter to current employees of the target company. Surface top 3 by recency and overlap.
+LinkedIn ID resolver caches `slug → numeric ID` in `data/linkedin_company_ids.json`, auto-grows to 45+ entries, falls back to the `/about/` page if the main page fails. The scraper uses `requests.Session()` for TCP reuse, exponential backoff on 429 (30s → 60s → 120s), ±40% jitter on all sleeps, and parallel description fetching with slot-based stagger — so LinkedIn doesn't see a burst pattern.
 
-**Tier 2 — Tavily cold search.** Query for "[Company] engineers India" with strict validation: must mention the candidate's company in profile, must be India-based, must have a public email or LinkedIn URL.
+Result: I'm pulling 79 companies' full hiring feeds in ~3 minutes, without IP bans.
 
-**Tier 3 — GPT-5.4-mini outreach generation.** Given a target's profile and the candidate's background, draft a 4-sentence personalized DM. Tone: warm, specific, no asks beyond a 15-min chat.
+## The SaaS layer
 
-Tier 1 fires for ~30% of applications. Tier 2 for ~50%. Tier 3 is the fallback for niche companies where the first two tiers come up empty.
+The CLI works. But each new user used to mean cloning the repo, fixing env vars, and onboarding manually. M2 wrapped it in a proper multi-user web product.
+
+The stack:
+
+- **SDK** (`sdk/dossier_sdk`) — Python 3.12, OpenAI + Anthropic, JobSpy, rich. All 8 agents + `orchestrator.run_pipeline`.
+- **Backend** (`backend/src/dossier_api`) — FastAPI 0.136, Pydantic 2, Clerk (`clerk-backend-api`), Svix HMAC webhooks, SSE progress, `fasteners` for atomic credit deduction.
+- **Frontend** (`frontend/app`) — Next.js 16, React 19, TypeScript strict, Tailwind v4, shadcn/ui, Clerk, TanStack Query, react-hook-form + zod.
+- **Worker** — long-running Python process. Atomic `pick_next_queued_run`. Dispatch table: `persona_synthesis` (M3) → `discovery` (M4) → all 8 agents (M5–M10).
+
+**Auth model**: Clerk owns user identity. `user.created` webhook (Svix HMAC verified) provisions a `pending` row in `accounts.db`. Admin promotes pending → active and assigns tier + credits. `GET /me` returns 200/401/403/suspended/pending — drives the app-shell branching on the frontend.
+
+**Credits model**: Each pipeline action has a cost and a min-tier gate.
+
+| Agent | Cost (credits) | Min tier | Est. runtime |
+|---|---:|:---:|---:|
+| `discovery` | 5 | Lite | 2m |
+| `watchlist` | 8 | Pro | 4m |
+| `company_intel` | 3 | Pro | 3m |
+| `gap_analysis` | 4 | Pro | 1m |
+| `resume_tailor` | 12 | Max | 90s |
+| `referral_finder` | 6 | Max | 2m |
+
+`POST /pipeline/run` atomically deducts credits + INSERTs a `pipeline_runs` row. The worker picks it up, streams progress over SSE, refunds idempotently on failure (keyed on `(run_id, reason)` so retries are safe).
+
+New accounts get **100 credits** on signup, **reset every 30 days**. Stripe/Razorpay integration is deferred until ≥20 Pro waitlist signups validate paying intent. Today the "Upgrade" button drops users into a `waitlist` row — proof of intent before I build the billing layer.
 
 ## What I'd improve
 
-- **Memory across runs.** Right now each Dossier session is stateless. A persistent memory of "you already applied to Acme Corp last month" would be useful.
-- **Async pipeline.** The 7 agents currently run mostly sequentially. With proper dependency mapping, the Discovery → Watchlist → Company Intel + Market Intel branches could run in parallel.
-- **Smaller models for Gap Analysis.** Haiku 4.5 is fine. A fine-tuned 3B model would be faster and cheaper.
+- **Memory across runs.** Each session is stateless. A persistent memory of "you already applied to Acme Corp last month" would prevent re-surfacing.
+- **Async fan-out.** The pipeline runs mostly sequentially. With proper dependency mapping, Discovery + Watchlist + Market Intel could run in parallel.
+- **Cheaper Gap Analysis.** Haiku 4.5 works. A fine-tuned 3B model would be faster and cheaper at scale.
+- **Real billing.** When the waitlist crosses 20 Pro signups, Stripe goes in.
 
----
+## The numbers right now
 
-## Profile-agnostic architecture
+| | |
+|---|---|
+| Agents built | 8 |
+| Target companies | 79 |
+| Active users | 4 |
+| Cost per discovery run | ~$0.04 |
+| Pre-filter drop rate | ~60% |
+| Milestone | M4 in progress |
 
-The thing I'm proudest of: Dossier loads all candidate data from a single JSON file at runtime. Want to run it for a different person? Swap the JSON. Zero code changes. The agents read from a shared context, and prompts are templated against that context.
-
-This wasn't the original design. I refactored after a friend asked to try it. Now it's a property of the system, and it's the property I think will let Dossier eventually become a tool other people use.
-
-The repo is on GitHub. The README walks through setup.
-
-More agent design notes coming. The next one is probably about why I gave up on LangGraph for this and went back to plain `ThreadPoolExecutor` orchestration.
+Code: [github.com/shivangsingh26/dossier](https://github.com/shivangsingh26/dossier). The next post is probably about why I gave up on LangGraph for orchestration and went back to plain Python.

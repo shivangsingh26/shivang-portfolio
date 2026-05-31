@@ -106,12 +106,24 @@ export type Project = {
 export const projects: Project[] = [
   {
     name: "Dossier",
-    tagline: "Autonomous Agentic Job Search Intelligence",
+    tagline: "Quality-first agentic job-search SaaS",
     description:
-      "7-agent autonomous pipeline (Job Discovery, Watchlist, Company Intel, Market Intel, Gap Analysis, Resume Agent, Referral Finder) that discovers, scores, researches, and generates tailored applications end-to-end. Parallel LLM scoring across 550+ jobs/run, pre-LLM rule filters cut 65% of API calls, Claude generates ATS-optimised LaTeX resumes via 3-pass self-evaluation.",
-    metric: { value: "$0.06", label: "per application" },
-    stack: ["GPT-5", "Claude Sonnet 4.6", "Claude Haiku 4.5", "Tavily", "ThreadPoolExecutor", "SQLite", "LaTeX"],
-    github: "https://github.com/shivangsingh26",
+      "8-agent autonomous pipeline (Persona Builder, Job Discovery, Watchlist, Company Intel, Gap Analysis, Market Intel, Resume Agent, Referral Finder) that finds, scores, researches, and surfaces roles most worth your time. Profile-driven scoring across 79 hand-picked companies, pre-LLM rule filter drops ~60% of jobs at zero cost, Claude generates ATS-optimised LaTeX resumes via 3-pass self-evaluation (Sonnet tailor → Haiku critic → Sonnet revise). M2+ wraps the CLI in a Next.js 16 + FastAPI + Clerk multi-user SaaS with credits, SSE progress, and async worker.",
+    metric: { value: "~$0.04", label: "per pipeline run" },
+    stack: [
+      "Python 3.12",
+      "GPT-5.4-mini",
+      "Claude Sonnet 4.6",
+      "Claude Haiku 4.5",
+      "FastAPI",
+      "Next.js 16",
+      "Clerk",
+      "Tavily",
+      "SSE",
+      "SQLite",
+      "LaTeX",
+    ],
+    github: "https://github.com/shivangsingh26/dossier",
     highlight: true,
   },
   {

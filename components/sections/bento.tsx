@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Sparkles, Code2, Coffee, Music2, Github, Zap, MapPin, Cpu } from "lucide-react";
+import { Code2, Coffee, Music2, Github, Zap, MapPin, Cpu } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
 
@@ -127,7 +127,7 @@ export function Bento() {
               <Github className="h-3.5 w-3.5 text-foreground" /> Recent ship
             </div>
             <a
-              href="https://github.com/shivangsingh26"
+              href="https://github.com/shivangsingh26/dossier"
               target="_blank"
               rel="noreferrer"
               className="mt-3 block font-display text-xl font-semibold tracking-tight transition-colors hover:text-[var(--primary)]"
@@ -135,12 +135,12 @@ export function Bento() {
               Dossier
             </a>
             <p className="mt-1 text-sm leading-snug text-muted-foreground">
-              7-agent autonomous job intel pipeline · $0.06/app · LaTeX resume gen
+              8-agent job-search SaaS · 79 companies · ~$0.04/run · M4 wip
             </p>
             <div className="mt-3 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70">
-              <span>GPT-5</span>
-              <span>· Claude 4.6</span>
-              <span>· Tavily</span>
+              <span>FastAPI</span>
+              <span>· Clerk</span>
+              <span>· Next 16</span>
             </div>
           </Cell>
 

@@ -4,6 +4,7 @@ import "./globals.css";
 import { LenisProvider } from "@/components/providers/lenis-provider";
 import { Cursor } from "@/components/effects/cursor";
 import { EasterEgg } from "@/components/effects/easter-egg";
+import { FloatingOrbs } from "@/components/effects/floating-orbs";
 import { ResumeModal } from "@/components/resume-modal";
 import { PageTransition } from "@/components/page-transition";
 import { profile } from "@/lib/data";
@@ -73,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body className="font-sans bg-background text-foreground antialiased grain selection:bg-primary/30">
+        <FloatingOrbs />
         <LenisProvider>
           <PageTransition>{children}</PageTransition>
         </LenisProvider>

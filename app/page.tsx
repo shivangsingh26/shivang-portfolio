@@ -10,7 +10,9 @@ import { Marquee } from "@/components/marquee";
 import { Bento } from "@/components/sections/bento";
 import { Testimonials } from "@/components/sections/testimonials";
 import { LatestBlog } from "@/components/sections/latest-blog";
+import { AIConcierge } from "@/components/sections/ai-concierge";
 import { SectionRail } from "@/components/section-rail";
+import { SectionDivider } from "@/components/section-divider";
 import { ChatRoot } from "@/components/chat/chat-root";
 
 export default function Page() {
@@ -21,10 +23,14 @@ export default function Page() {
       <Hero />
       <Marquee />
       <Bento />
+      <SectionDivider glyph="★" />
       <About />
       <Experience />
+      <SectionDivider glyph="◆" />
       <Projects />
       <Skills />
+      <SectionDivider glyph="✦" />
+      <AIConcierge />
       <Testimonials />
       <GitHubSection />
       <LatestBlog />

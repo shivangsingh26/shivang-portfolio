@@ -157,6 +157,21 @@ export function ChatWidget({
     setInput("");
   };
 
+  // Handle prefill from AI Concierge sample prompts
+  useEffect(() => {
+    if (!open) return;
+    try {
+      const prefill = sessionStorage.getItem("shivang.chat.prefill");
+      if (prefill) {
+        sessionStorage.removeItem("shivang.chat.prefill");
+        submit(prefill);
+      }
+    } catch {
+      // ignore
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     submit(input);
@@ -168,6 +183,36 @@ export function ChatWidget({
 
   return (
     <>
+      {/* Hint tooltip — appears once per session, dismisses on click */}
+      <AnimatePresence>
+        {!open && messages.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.9 }}
+            transition={{ delay: 1.5, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="pointer-events-none fixed bottom-[5.75rem] right-5 z-40 hidden items-center gap-1.5 rounded-full border border-border bg-background/90 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-foreground backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.4)] sm:bottom-[6.5rem] sm:right-6 sm:flex"
+          >
+            <span className="relative inline-flex h-1.5 w-1.5">
+              <span className="absolute inset-0 animate-ping rounded-full bg-[var(--coral)] opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--coral)]" />
+            </span>
+            ask my AI
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Aurora pulse rings behind FAB */}
+      {!open && (
+        <div
+          aria-hidden
+          className="pointer-events-none fixed bottom-5 right-5 z-40 h-14 w-14 sm:bottom-6 sm:right-6"
+        >
+          <span className="absolute inset-0 animate-ping rounded-full bg-gradient-to-tr from-[var(--violet)] via-[var(--primary)] to-[var(--coral)] opacity-30" style={{ animationDuration: "2.8s" }} />
+          <span className="absolute -inset-1 rounded-full bg-gradient-to-tr from-[var(--violet)]/30 via-[var(--primary)]/30 to-[var(--coral)]/30 blur-md" />
+        </div>
+      )}
+
       <button
         type="button"
         onClick={() => {
