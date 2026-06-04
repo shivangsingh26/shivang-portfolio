@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Home, MessageSquare, FileDown } from "lucide-react";
 import { AuroraBg } from "@/components/hero/aurora-bg";
+import { TargetGame } from "@/components/effects/target-game";
 
 export default function NotFound() {
   return (
@@ -51,6 +52,13 @@ export default function NotFound() {
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
             Or open chat (bottom-right) and ask my AI
           </span>
+        </div>
+
+        <div className="mt-14">
+          <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+            ◇ Stay a while
+          </div>
+          <TargetGame />
         </div>
 
         <div className="mt-12">

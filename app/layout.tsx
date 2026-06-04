@@ -7,6 +7,10 @@ import { EasterEgg } from "@/components/effects/easter-egg";
 import { FloatingOrbs } from "@/components/effects/floating-orbs";
 import { FloatingGlyphs } from "@/components/effects/floating-glyphs";
 import { ScrollProgress } from "@/components/effects/scroll-progress";
+import { QuickDock } from "@/components/effects/quick-dock";
+import { CursorTrail } from "@/components/effects/cursor-trail";
+import { StatusBanner } from "@/components/effects/status-banner";
+import { ConfettiLayer } from "@/components/effects/confetti";
 import { ResumeModal } from "@/components/resume-modal";
 import { PageTransition } from "@/components/page-transition";
 import { profile } from "@/lib/data";
@@ -76,13 +80,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body className="font-sans bg-background text-foreground antialiased grain selection:bg-primary/30">
+        <StatusBanner />
         <ScrollProgress />
         <FloatingOrbs />
         <FloatingGlyphs />
+        <CursorTrail />
         <LenisProvider>
           <PageTransition>{children}</PageTransition>
         </LenisProvider>
         <Cursor />
+        <QuickDock />
+        <ConfettiLayer />
         <ResumeModal />
         <EasterEgg />
         <Analytics />

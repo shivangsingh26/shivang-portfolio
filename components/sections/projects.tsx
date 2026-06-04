@@ -1,14 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { motion, useMotionValue, useTransform } from "motion/react";
-import { ArrowUpRight, Github } from "lucide-react";
+import { ArrowUpRight, Github, Maximize2 } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
 import { Tilt } from "@/components/motion/tilt";
 import { SectionWatermark } from "@/components/effects/section-watermark";
+import { LikeButton } from "@/components/effects/like-button";
+import { ViewCounter } from "@/components/effects/view-counter";
+import { ProjectModal } from "@/components/project-modal";
 import { projects, type Project } from "@/lib/data";
 
-function ProjectCard({ p, idx }: { p: Project; idx: number }) {
+function ProjectCard({ p, idx, onOpen }: { p: Project; idx: number; onOpen: (p: Project) => void }) {
   const mx = useMotionValue(50);
   const my = useMotionValue(50);
   const bg = useTransform([mx, my], ([x, y]) =>
@@ -24,12 +28,14 @@ function ProjectCard({ p, idx }: { p: Project; idx: number }) {
   return (
     <Tilt max={5} className="h-full">
     <motion.div
+      layoutId={`project-${p.name}`}
       onMouseMove={handle}
+      onClick={() => onOpen(p)}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
       transition={{ duration: 0.7, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative h-full overflow-hidden rounded-2xl border border-border/40 bg-card/40 p-6 backdrop-blur transition hover:border-primary/40 sm:p-8"
+      className="group relative h-full cursor-pointer overflow-hidden rounded-2xl border border-border/40 bg-card/40 p-6 backdrop-blur transition hover:border-primary/40 sm:p-8"
     >
       <motion.div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" style={{ background: bg }} aria-hidden />
       <div className="absolute -right-24 -top-24 h-48 w-48 rounded-full bg-primary/10 blur-3xl transition-all duration-700 group-hover:scale-150 group-hover:bg-primary/20" aria-hidden />
@@ -69,25 +75,37 @@ function ProjectCard({ p, idx }: { p: Project; idx: number }) {
         ))}
       </div>
 
-      {p.github && (
-        <a
-          href={p.github}
-          target="_blank"
-          rel="noreferrer"
-          data-cursor="hover"
-          className="relative mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary"
-        >
-          <Github className="h-4 w-4" />
-          View source
-          <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-        </a>
-      )}
+      <div className="relative mt-6 flex items-center justify-between gap-3">
+        {p.github ? (
+          <a
+            href={p.github}
+            target="_blank"
+            rel="noreferrer"
+            data-cursor="hover"
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition hover:text-primary"
+          >
+            <Github className="h-4 w-4" />
+            View source
+            <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </a>
+        ) : <span />}
+        <div className="flex items-center gap-2">
+          <ViewCounter slug={`project-${p.name}`} />
+          <LikeButton id={`project-${p.name}`} seed={12 + idx * 7} />
+          <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/40 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+            <Maximize2 className="h-3 w-3" />
+            Case study
+          </span>
+        </div>
+      </div>
     </motion.div>
     </Tilt>
   );
 }
 
 export function Projects() {
+  const [active, setActive] = useState<Project | null>(null);
   return (
     <section id="projects" className="relative w-full py-32 sm:py-44">
       <SectionWatermark num="03" align="right" />
@@ -109,10 +127,11 @@ export function Projects() {
 
         <div className="mt-16 grid gap-5 sm:gap-6 md:grid-cols-2">
           {projects.map((p, i) => (
-            <ProjectCard key={p.name} p={p} idx={i} />
+            <ProjectCard key={p.name} p={p} idx={i} onOpen={setActive} />
           ))}
         </div>
       </div>
+      <ProjectModal project={active} onClose={() => setActive(null)} />
     </section>
   );
 }

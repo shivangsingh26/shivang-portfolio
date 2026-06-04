@@ -2,9 +2,16 @@
 
 import { motion } from "motion/react";
 import { useRef } from "react";
+import dynamic from "next/dynamic";
 import { Code2, Coffee, Music2, Github, Zap, MapPin, Cpu } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
+
+const FloatingShapes3D = dynamic(
+  () =>
+    import("@/components/effects/floating-shapes-3d").then((m) => m.FloatingShapes3D),
+  { ssr: false }
+);
 
 const NOW_STACK = ["Gemini 2.5 Pro", "Claude 4.6", "FastAPI", "Kubernetes", "PyTorch", "Pydantic"];
 
@@ -52,6 +59,10 @@ function Cell({
 export function Bento() {
   return (
     <section className="relative w-full py-28 sm:py-36">
+      {/* 3D drifting polyhedra layer */}
+      <div className="pointer-events-none absolute inset-0 -z-10 opacity-40">
+        <FloatingShapes3D />
+      </div>
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
         <Reveal>
           <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">

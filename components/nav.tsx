@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { dispatchOpenPalette } from "@/lib/events";
 import { dispatchOpenResume } from "@/components/resume-modal";
 import { track } from "@/lib/telemetry";
+import { LiveClock } from "@/components/effects/live-clock";
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -55,14 +56,20 @@ export function Nav() {
             scrolled ? "bg-background/70 shadow-[0_8px_30px_rgba(0,0,0,0.5)]" : "bg-background/40"
           )}
         >
-          <Link href="#hero" className="group flex items-center gap-2 font-mono text-sm" data-cursor="hover">
-            <span className="relative inline-flex h-2 w-2">
-              <span className="absolute inset-0 animate-ping rounded-full bg-primary opacity-60" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+          <div className="flex items-center gap-3">
+            <Link href="#hero" className="group flex items-center gap-2 font-mono text-sm" data-cursor="hover">
+              <span className="relative inline-flex h-2 w-2">
+                <span className="absolute inset-0 animate-ping rounded-full bg-primary opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+              </span>
+              <span className="font-semibold tracking-tight">{profile.firstName.toLowerCase()}.</span>
+              <span className="text-muted-foreground transition-colors group-hover:text-foreground">/dev</span>
+            </Link>
+            <span aria-hidden className="hidden h-3 w-px bg-border lg:inline-block" />
+            <span className="hidden lg:inline-flex">
+              <LiveClock />
             </span>
-            <span className="font-semibold tracking-tight">{profile.firstName.toLowerCase()}.</span>
-            <span className="text-muted-foreground transition-colors group-hover:text-foreground">/dev</span>
-          </Link>
+          </div>
 
           <nav className="hidden items-center gap-1 md:flex">
             {navLinks.map((link) => (

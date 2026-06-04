@@ -1,7 +1,13 @@
 "use client";
 
 import { motion } from "motion/react";
+import dynamic from "next/dynamic";
 import { ArrowUpRight, Github, Linkedin, Mail, MapPin, FileDown } from "lucide-react";
+
+const ScrollMesh3D = dynamic(
+  () => import("@/components/effects/scroll-mesh-3d").then((m) => m.ScrollMesh3D),
+  { ssr: false }
+);
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
 import { Magnetic } from "@/components/motion/magnetic";
@@ -37,8 +43,12 @@ const channels = [
 
 export function Contact() {
   return (
-    <section id="contact" className="relative w-full py-32 sm:py-44">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+    <section id="contact" className="relative w-full overflow-hidden py-32 sm:py-44">
+      {/* 3D scroll-bound wireframe accent */}
+      <div className="pointer-events-none absolute right-[-10%] top-1/2 -z-10 h-[600px] w-[600px] -translate-y-1/2 opacity-30 hidden lg:block">
+        <ScrollMesh3D />
+      </div>
+      <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6">
         <Reveal>
           <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
             <span className="h-px w-8 bg-primary" />
@@ -89,6 +99,22 @@ export function Contact() {
               >
                 <FileDown className="h-4 w-4" />
                 Download resume
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a
+                href={`https://cal.com/${profile.linkedin}/intro`}
+                target="_blank"
+                rel="noreferrer"
+                data-cursor="hover"
+                onClick={() => track("cta_click", { target: "cal_book", location: "contact" })}
+                className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/40 px-6 py-3.5 text-sm font-medium backdrop-blur transition hover:border-[var(--violet)]/60 hover:text-[var(--violet)]"
+              >
+                <span className="relative inline-flex h-2 w-2">
+                  <span className="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-70" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                </span>
+                Book 30-min intro
               </a>
             </Magnetic>
           </div>

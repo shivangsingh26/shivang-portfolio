@@ -14,9 +14,9 @@ export function SectionDivider({ glyph = "·" }: { glyph?: string }) {
     target: ref,
     offset: ["start end", "end start"],
   });
-  const scaleLeft = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 1]);
-  const scaleRight = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 1], [0, 1, 1]);
+  const scaleLeft = useTransform(scrollYProgress, [0, 0.35, 1], [0, 1, 1]);
+  const scaleRight = useTransform(scrollYProgress, [0, 0.35, 1], [0, 1, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 1], [0, 1, 1]);
 
   return (
     <div ref={ref} className="relative mx-auto w-full max-w-4xl px-4 py-2 sm:px-6">

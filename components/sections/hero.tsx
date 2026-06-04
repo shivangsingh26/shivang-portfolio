@@ -10,6 +10,8 @@ import { AuroraBg } from "@/components/hero/aurora-bg";
 import { HeroSpotlight } from "@/components/effects/hero-spotlight";
 import { OrbitRing } from "@/components/effects/orbit-ring";
 import { DotGrid } from "@/components/effects/dot-grid";
+import { NeuralCanvas } from "@/components/effects/neural-canvas";
+import { Hero3D } from "@/components/effects/hero-3d";
 import { dispatchOpenChat } from "@/lib/events";
 import { track } from "@/lib/telemetry";
 
@@ -28,8 +30,11 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
     >
       <AuroraBg />
 
+      {/* Neural network constellation */}
+      <NeuralCanvas className="-z-[6] opacity-70" />
+
       {/* Dot grid (replaces flat lines) */}
-      <DotGrid className="-z-[5] opacity-60" />
+      <DotGrid className="-z-[5] opacity-50" />
 
       {/* Cursor-tracked spotlight */}
       <HeroSpotlight />
@@ -185,7 +190,6 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
         {/* RIGHT: Globe — statement element */}
         <div className="relative flex items-center justify-center lg:justify-end">
           <div className="relative">
-            {/* glow halo behind globe */}
             <div
               aria-hidden
               className="absolute -inset-10 -z-10 rounded-full opacity-60 blur-3xl"
@@ -195,8 +199,10 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
               }}
             />
             <OrbitRing size={620} />
+            <div className="pointer-events-none absolute inset-0 -z-[2] opacity-50">
+              <Hero3D />
+            </div>
             <Globe size={520} />
-            {/* Bengaluru label */}
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}

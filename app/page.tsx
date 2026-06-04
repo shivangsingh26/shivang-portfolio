@@ -11,6 +11,7 @@ import { Bento } from "@/components/sections/bento";
 // import { Testimonials } from "@/components/sections/testimonials";
 import { LatestBlog } from "@/components/sections/latest-blog";
 import { AIConcierge } from "@/components/sections/ai-concierge";
+import { MegaStats } from "@/components/sections/mega-stats";
 import { SectionRail } from "@/components/section-rail";
 import { SectionDivider } from "@/components/section-divider";
 import { ChatRoot } from "@/components/chat/chat-root";
@@ -22,6 +23,7 @@ export default function Page() {
       <SectionRail />
       <Hero />
       <Marquee />
+      <MegaStats />
       <Bento />
       <SectionDivider glyph="★" />
       <About />

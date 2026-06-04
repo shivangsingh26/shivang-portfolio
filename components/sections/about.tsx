@@ -2,10 +2,16 @@
 
 import { motion, useScroll, useTransform, useSpring } from "motion/react";
 import { useRef } from "react";
+import dynamic from "next/dynamic";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
 import { Counter } from "@/components/motion/counter";
 import { profile, stats } from "@/lib/data";
+
+const LiquidBlob3D = dynamic(
+  () => import("@/components/effects/liquid-blob-3d").then((m) => m.LiquidBlob3D),
+  { ssr: false }
+);
 
 function StatCard({ value, label, idx }: { value: string; label: string; idx: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -110,10 +116,16 @@ export function About() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 self-start md:col-span-5 md:gap-4">
-            {stats.map((s, i) => (
-              <StatCard key={s.label} value={s.value} label={s.label} idx={i} />
-            ))}
+          <div className="relative self-start md:col-span-5">
+            {/* 3D liquid blob accent */}
+            <div className="pointer-events-none absolute -inset-8 -z-10 opacity-50">
+              <LiquidBlob3D />
+            </div>
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
+              {stats.map((s, i) => (
+                <StatCard key={s.label} value={s.value} label={s.label} idx={i} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
