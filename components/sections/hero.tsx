@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { motion } from "motion/react";
-import { ArrowDown, ArrowUpRight, MessageSquare, MapPin, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowUpRight, MapPin, Sparkles, Cpu, BadgeCheck } from "lucide-react";
 import { profile } from "@/lib/data";
 import { Magnetic } from "@/components/motion/magnetic";
 import { TypingText } from "@/components/motion/typing-text";
@@ -34,22 +34,44 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
       {/* Cursor-tracked spotlight */}
       <HeroSpotlight />
 
+      {/* Corner brackets — terminal-style decoration */}
+      <div aria-hidden className="pointer-events-none absolute inset-6 -z-[3] hidden lg:block">
+        <span className="absolute left-0 top-0 h-6 w-6 border-l border-t border-foreground/15" />
+        <span className="absolute right-0 top-0 h-6 w-6 border-r border-t border-foreground/15" />
+        <span className="absolute bottom-0 left-0 h-6 w-6 border-b border-l border-foreground/15" />
+        <span className="absolute bottom-0 right-0 h-6 w-6 border-b border-r border-foreground/15" />
+      </div>
+
       <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-10 px-4 pt-32 sm:px-6 md:pt-36 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-8">
         {/* LEFT: text */}
         <div>
-          {/* Status pill */}
+          {/* Status pill row */}
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-7 inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1.5 backdrop-blur"
+            className="mb-7 flex flex-wrap items-center gap-2"
           >
-            <span className="relative inline-flex h-1.5 w-1.5">
-              <span className="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            <span className="gradient-border relative inline-flex items-center gap-2 rounded-full bg-card/60 px-3 py-1.5 backdrop-blur">
+              <span className="relative inline-flex h-1.5 w-1.5">
+                <span className="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              </span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                Available · open to roles
+              </span>
             </span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              Available · open to roles
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-2.5 py-1 backdrop-blur">
+              <BadgeCheck className="h-3 w-3 text-[var(--primary)]" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                @ {profile.company}
+              </span>
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/40 px-2.5 py-1 backdrop-blur">
+              <Cpu className="h-3 w-3 text-[var(--violet)]" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                Shipping Bodhi Atomize
+              </span>
             </span>
           </motion.div>
 
@@ -107,9 +129,19 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
                 href="#projects"
                 data-cursor="hover"
                 onClick={() => track("cta_click", { target: "view_work", location: "hero" })}
-                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background transition"
+                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background shadow-[0_0_0_1px_oklch(1_0_0_/_0.08),0_8px_30px_-8px_oklch(0.66_0.18_254_/_0.5)] transition"
               >
                 <span className="absolute inset-0 -z-10 translate-y-full bg-gradient-to-tr from-[var(--violet)] via-[var(--primary)] to-[var(--coral)] transition-transform duration-500 group-hover:translate-y-0" />
+                <span
+                  aria-hidden
+                  className="absolute inset-0 -z-10 opacity-60"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, transparent, oklch(1 0 0 / 0.18), transparent)",
+                    backgroundSize: "200% 100%",
+                    animation: "shimmer 3.5s linear infinite",
+                  }}
+                />
                 <span className="relative group-hover:text-white">View work</span>
                 <ArrowUpRight className="relative h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
@@ -195,8 +227,11 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
           opacity: { delay: 1, duration: 0.6 },
           y: { delay: 1.2, duration: 2, repeat: Infinity, ease: "easeInOut" },
         }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 text-muted-foreground transition-colors hover:text-foreground"
+        className="group absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
       >
+        <span className="font-mono text-[9px] uppercase tracking-[0.3em] opacity-70 group-hover:opacity-100">
+          Scroll
+        </span>
         <ArrowDown className="h-5 w-5" />
       </motion.a>
     </section>

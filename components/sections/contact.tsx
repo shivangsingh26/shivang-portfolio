@@ -126,12 +126,30 @@ export function Contact() {
           ))}
         </div>
 
-        <div className="mt-24 flex flex-col items-center justify-between gap-3 border-t border-border/40 pt-8 sm:flex-row">
-          <div className="font-mono text-xs text-muted-foreground">
-            © {new Date().getFullYear()} {profile.name}. Crafted with care.
+        <div className="mt-24 border-t border-border/40 pt-8">
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div className="flex items-center gap-3">
+              <span className="relative inline-flex h-2 w-2">
+                <span className="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              </span>
+              <span className="font-mono text-xs text-muted-foreground">
+                © {new Date().getFullYear()} {profile.name} · Bengaluru, IN
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {["Next.js", "Tailwind", "Motion", "R3F", "AI SDK"].map((t) => (
+                <span
+                  key={t}
+                  className="rounded-md border border-border/60 bg-card/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground backdrop-blur"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
           </div>
-          <div className="font-mono text-xs text-muted-foreground">
-            Next.js · Tailwind · Motion · R3F · AI SDK
+          <div className="mt-4 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/50">
+            v2.0 · last shipped {new Date().toLocaleDateString("en-US", { month: "short", year: "numeric" })}
           </div>
         </div>
       </div>

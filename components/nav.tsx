@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence, useScroll, useSpring } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, Search } from "lucide-react";
 import { navLinks, profile } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -14,8 +14,6 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string>("");
-  const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -45,10 +43,6 @@ export function Nav() {
 
   return (
     <>
-      <motion.div
-        className="fixed left-0 right-0 top-0 z-50 h-[2px] origin-left bg-gradient-to-r from-primary via-glow to-primary"
-        style={{ scaleX: progress }}
-      />
       <header
         className={cn(
           "fixed inset-x-0 top-3 z-40 mx-auto flex max-w-6xl items-center justify-between px-4 transition-all duration-300 sm:px-6",
