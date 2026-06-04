@@ -3,12 +3,14 @@
 import { motion } from "motion/react";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
+import { SectionWatermark } from "@/components/effects/section-watermark";
 import { skills, certifications } from "@/lib/data";
 
 export function Skills() {
   return (
     <section id="skills" className="relative w-full py-32 sm:py-44">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+      <SectionWatermark num="04" align="left" />
+      <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6">
         <Reveal>
           <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
             <span className="h-px w-8 bg-primary" />

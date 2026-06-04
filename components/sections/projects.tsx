@@ -5,6 +5,7 @@ import { ArrowUpRight, Github } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
 import { Tilt } from "@/components/motion/tilt";
+import { SectionWatermark } from "@/components/effects/section-watermark";
 import { projects, type Project } from "@/lib/data";
 
 function ProjectCard({ p, idx }: { p: Project; idx: number }) {
@@ -89,7 +90,8 @@ function ProjectCard({ p, idx }: { p: Project; idx: number }) {
 export function Projects() {
   return (
     <section id="projects" className="relative w-full py-32 sm:py-44">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+      <SectionWatermark num="03" align="right" />
+      <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6">
         <Reveal>
           <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
             <span className="h-px w-8 bg-primary" />

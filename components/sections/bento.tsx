@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useRef } from "react";
 import { Code2, Coffee, Music2, Github, Zap, MapPin, Cpu } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
@@ -11,19 +12,38 @@ function Cell({
   className = "",
   children,
   delay = 0,
+  hue = "oklch(0.72 0.20 250 / 0.20)",
 }: {
   className?: string;
   children: React.ReactNode;
   delay?: number;
+  hue?: string;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+    el.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
+  };
   return (
     <motion.div
+      ref={ref}
+      onMouseMove={onMove}
       initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
       transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
       className={`group relative overflow-hidden rounded-2xl border border-border bg-card/40 backdrop-blur transition-colors hover:border-foreground/20 ${className}`}
     >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        style={{
+          background: `radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), ${hue}, transparent 60%)`,
+        }}
+      />
       {children}
     </motion.div>
   );

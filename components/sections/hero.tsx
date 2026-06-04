@@ -7,6 +7,9 @@ import { profile } from "@/lib/data";
 import { Magnetic } from "@/components/motion/magnetic";
 import { TypingText } from "@/components/motion/typing-text";
 import { AuroraBg } from "@/components/hero/aurora-bg";
+import { HeroSpotlight } from "@/components/effects/hero-spotlight";
+import { OrbitRing } from "@/components/effects/orbit-ring";
+import { DotGrid } from "@/components/effects/dot-grid";
 import { dispatchOpenChat } from "@/lib/events";
 import { track } from "@/lib/telemetry";
 
@@ -25,8 +28,11 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
     >
       <AuroraBg />
 
-      {/* Faint grid on top of aurora */}
-      <div className="absolute inset-0 -z-[5] grid-bg opacity-30" aria-hidden />
+      {/* Dot grid (replaces flat lines) */}
+      <DotGrid className="-z-[5] opacity-60" />
+
+      {/* Cursor-tracked spotlight */}
+      <HeroSpotlight />
 
       <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-10 px-4 pt-32 sm:px-6 md:pt-36 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-8">
         {/* LEFT: text */}
@@ -156,6 +162,7 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
                   "radial-gradient(circle, oklch(0.66 0.18 254 / 0.25), oklch(0.68 0.22 290 / 0.15) 50%, transparent 80%)",
               }}
             />
+            <OrbitRing size={620} />
             <Globe size={520} />
             {/* Bengaluru label */}
             <motion.div
