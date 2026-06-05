@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
 import { SectionWatermark } from "@/components/effects/section-watermark";
+import { Eyebrow } from "@/components/eyebrow";
 import { skills, certifications } from "@/lib/data";
 
 export function Skills() {
@@ -12,16 +13,13 @@ export function Skills() {
       <SectionWatermark num="04" align="left" />
       <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6">
         <Reveal>
-          <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-            <span className="h-px w-8 bg-primary" />
-            04 · Toolkit
-          </div>
+          <Eyebrow>04 · Toolkit</Eyebrow>
         </Reveal>
-        <h2 className="mt-8 font-display text-balance text-[clamp(2rem,5vw,3.75rem)] font-semibold leading-[1.1] tracking-[-0.03em]">
+        <h2 className="mt-8 font-display text-balance text-[clamp(2.25rem,5.5vw,4rem)] font-semibold leading-[1.1] tracking-[-0.03em]">
           <SplitTextSegmented
             segments={[
               { text: "The stack I" },
-              { text: " reach for.", className: "gradient-text" },
+              { text: " reach for.", className: "text-[var(--primary)]" },
             ]}
           />
         </h2>
@@ -34,7 +32,7 @@ export function Skills() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-10%" }}
               transition={{ duration: 0.6, delay: catIdx * 0.08 }}
-              className="group relative overflow-hidden rounded-xl border border-border/40 bg-card/40 p-6 backdrop-blur transition hover:border-primary/40"
+              className="cinema-card group relative overflow-hidden rounded-2xl p-6 backdrop-blur"
             >
               <div className="flex items-center justify-between">
                 <h3 className="font-display text-lg font-semibold tracking-tight">{cat}</h3>
@@ -51,7 +49,7 @@ export function Skills() {
                     viewport={{ once: true }}
                     transition={{ delay: catIdx * 0.08 + i * 0.03, duration: 0.4 }}
                     whileHover={{ y: -2 }}
-                    className="cursor-default rounded-lg border border-border/60 bg-background/40 px-2.5 py-1 font-mono text-xs text-muted-foreground transition hover:border-primary/40 hover:text-foreground"
+                    className="cursor-default rounded-lg border border-border bg-background/40 px-2.5 py-1 font-mono text-xs text-muted-foreground transition hover:border-foreground/30 hover:text-foreground"
                   >
                     {s}
                   </motion.span>
@@ -62,7 +60,7 @@ export function Skills() {
         </div>
 
         <Reveal delay={0.2} className="mt-10">
-          <div className="rounded-xl border border-border/40 bg-card/40 p-6 backdrop-blur">
+          <div className="cinema-card rounded-2xl p-6 backdrop-blur">
             <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
               Certifications
             </div>

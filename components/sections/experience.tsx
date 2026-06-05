@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { MapPin } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
+import { Eyebrow } from "@/components/eyebrow";
 import { experiences } from "@/lib/data";
 
 export function Experience() {
@@ -16,16 +17,13 @@ export function Experience() {
     <section id="experience" className="relative w-full py-32 sm:py-44">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
         <Reveal>
-          <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-            <span className="h-px w-8 bg-primary" />
-            02 · Experience
-          </div>
+          <Eyebrow>02 · Experience</Eyebrow>
         </Reveal>
-        <h2 className="mt-8 font-display text-balance text-[clamp(2rem,5vw,3.75rem)] font-semibold leading-[1.1] tracking-[-0.03em]">
+        <h2 className="mt-8 font-display text-balance text-[clamp(2.25rem,5.5vw,4rem)] font-semibold leading-[1.1] tracking-[-0.03em]">
           <SplitTextSegmented
             segments={[
               { text: "Production work," },
-              { text: " at scale.", className: "gradient-text" },
+              { text: " at scale.", className: "text-[var(--primary)]" },
             ]}
           />
         </h2>
@@ -65,7 +63,7 @@ export function Experience() {
                       left ? "md:pr-12 md:text-right" : "md:col-start-2 md:pl-12"
                     }`}
                   >
-                    <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/40 p-5 backdrop-blur transition hover:border-primary/40">
+                    <div className="cinema-card group relative overflow-hidden rounded-2xl p-5 backdrop-blur">
                       <div className="flex flex-wrap items-baseline justify-between gap-2">
                         <div className="font-display text-lg font-semibold tracking-tight">
                           {e.company}

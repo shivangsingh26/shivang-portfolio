@@ -1,7 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { motion } from "motion/react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { ArrowDown, ArrowUpRight, MapPin, Sparkles, Cpu, BadgeCheck } from "lucide-react";
 import { profile } from "@/lib/data";
 import { Magnetic } from "@/components/motion/magnetic";
@@ -9,9 +10,6 @@ import { TypingText } from "@/components/motion/typing-text";
 import { AuroraBg } from "@/components/hero/aurora-bg";
 import { HeroSpotlight } from "@/components/effects/hero-spotlight";
 import { OrbitRing } from "@/components/effects/orbit-ring";
-import { DotGrid } from "@/components/effects/dot-grid";
-import { NeuralCanvas } from "@/components/effects/neural-canvas";
-import { Hero3D } from "@/components/effects/hero-3d";
 import { dispatchOpenChat } from "@/lib/events";
 import { track } from "@/lib/telemetry";
 
@@ -23,31 +21,42 @@ const Globe = dynamic(() => import("@/components/hero/globe").then((m) => m.Glob
 const ROLES = ["AI Engineer", "GenAI Architect", "ML Systems Builder", "LLM Infra Engineer"];
 
 export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => void }) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Cinematic scroll-driven scene. Disabled on reduce-motion.
+  const auroraY = useTransform(scrollYProgress, [0, 1], ["0%", reduceMotion ? "0%" : "-15%"]);
+  const auroraOpacity = useTransform(scrollYProgress, [0, 0.6, 1], [1, 0.6, 0.2]);
+  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", reduceMotion ? "0%" : "-10%"]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.6, 1], [1, 0.6, 0]);
+  const globeScale = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 0.86]);
+
   return (
     <section
+      ref={sectionRef}
       id="hero"
       className="relative isolate flex min-h-[100svh] w-full items-center overflow-hidden"
     >
-      <AuroraBg />
+      {/* Aurora — sole background field, drifts on scroll */}
+      <motion.div
+        style={{ y: auroraY, opacity: auroraOpacity }}
+        className="absolute inset-0 -z-10"
+      >
+        <AuroraBg />
+      </motion.div>
 
-      {/* Neural network constellation */}
-      <NeuralCanvas className="-z-[6] opacity-70" />
-
-      {/* Dot grid (replaces flat lines) */}
-      <DotGrid className="-z-[5] opacity-50" />
-
-      {/* Cursor-tracked spotlight */}
+      {/* Subtle cursor spotlight kept — adds responsive depth, not noise */}
       <HeroSpotlight />
 
-      {/* Corner brackets — terminal-style decoration */}
-      <div aria-hidden className="pointer-events-none absolute inset-6 -z-[3] hidden lg:block">
-        <span className="absolute left-0 top-0 h-6 w-6 border-l border-t border-foreground/15" />
-        <span className="absolute right-0 top-0 h-6 w-6 border-r border-t border-foreground/15" />
-        <span className="absolute bottom-0 left-0 h-6 w-6 border-b border-l border-foreground/15" />
-        <span className="absolute bottom-0 right-0 h-6 w-6 border-b border-r border-foreground/15" />
-      </div>
-
-      <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-10 px-4 pt-32 sm:px-6 md:pt-36 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-8">
+      <motion.div
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-10 px-4 pt-32 sm:px-6 md:pt-36 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-8"
+      >
         {/* LEFT: text */}
         <div>
           {/* Status pill row */}
@@ -80,12 +89,12 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
             </span>
           </motion.div>
 
-          {/* Name */}
+          {/* Name — last name is the ONLY aurora-text on the page */}
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-            className="font-display text-balance text-[clamp(2.75rem,8.5vw,7rem)] font-semibold leading-[1.02] tracking-[-0.045em]"
+            className="font-display text-balance text-[clamp(3rem,9vw,7.5rem)] font-semibold leading-[1.02] tracking-[-0.045em]"
           >
             <span className="text-foreground">{profile.firstName} </span>
             <span className="aurora-text">{profile.lastName}.</span>
@@ -136,17 +145,7 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
                 onClick={() => track("cta_click", { target: "view_work", location: "hero" })}
                 className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background shadow-[0_0_0_1px_oklch(1_0_0_/_0.08),0_8px_30px_-8px_oklch(0.66_0.18_254_/_0.5)] transition"
               >
-                <span className="absolute inset-0 -z-10 translate-y-full bg-gradient-to-tr from-[var(--violet)] via-[var(--primary)] to-[var(--coral)] transition-transform duration-500 group-hover:translate-y-0" />
-                <span
-                  aria-hidden
-                  className="absolute inset-0 -z-10 opacity-60"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, transparent, oklch(1 0 0 / 0.18), transparent)",
-                    backgroundSize: "200% 100%",
-                    animation: "shimmer 3.5s linear infinite",
-                  }}
-                />
+                <span className="absolute inset-0 -z-10 translate-y-full bg-gradient-to-tr from-[var(--violet)] to-[var(--primary)] transition-transform duration-500 group-hover:translate-y-0" />
                 <span className="relative group-hover:text-white">View work</span>
                 <ArrowUpRight className="relative h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
@@ -161,7 +160,7 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
                 data-cursor="hover"
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-5 py-3 text-sm font-medium backdrop-blur transition-colors hover:border-foreground/40"
               >
-                <Sparkles className="h-4 w-4 text-[var(--coral)]" />
+                <Sparkles className="h-4 w-4 text-[var(--violet)]" />
                 Talk to my AI
               </button>
             </Magnetic>
@@ -187,21 +186,21 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
           </motion.div>
         </div>
 
-        {/* RIGHT: Globe — statement element */}
-        <div className="relative flex items-center justify-center lg:justify-end">
+        {/* RIGHT: Globe — single statement element, scroll-scaled */}
+        <motion.div
+          style={{ scale: globeScale }}
+          className="relative flex items-center justify-center lg:justify-end"
+        >
           <div className="relative">
             <div
               aria-hidden
-              className="absolute -inset-10 -z-10 rounded-full opacity-60 blur-3xl"
+              className="absolute -inset-10 -z-10 rounded-full opacity-50 blur-3xl"
               style={{
                 background:
-                  "radial-gradient(circle, oklch(0.66 0.18 254 / 0.25), oklch(0.68 0.22 290 / 0.15) 50%, transparent 80%)",
+                  "radial-gradient(circle, oklch(0.66 0.16 254 / 0.22), oklch(0.68 0.18 295 / 0.12) 50%, transparent 80%)",
               }}
             />
             <OrbitRing size={620} />
-            <div className="pointer-events-none absolute inset-0 -z-[2] opacity-50">
-              <Hero3D />
-            </div>
             <Globe size={520} />
             <motion.div
               initial={{ opacity: 0, y: 8 }}
@@ -211,8 +210,8 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
             >
               <div className="flex items-center gap-2">
                 <span className="relative inline-flex h-1.5 w-1.5">
-                  <span className="absolute inset-0 animate-ping rounded-full bg-[var(--coral)] opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--coral)]" />
+                  <span className="absolute inset-0 animate-ping rounded-full bg-[var(--primary)] opacity-75" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--primary)]" />
                 </span>
                 <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                   Bengaluru · 12.97°N 77.59°E
@@ -220,8 +219,8 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
               </div>
             </motion.div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Scroll cue */}
       <motion.a

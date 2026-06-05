@@ -9,6 +9,7 @@ import { Tilt } from "@/components/motion/tilt";
 import { SectionWatermark } from "@/components/effects/section-watermark";
 import { LikeButton } from "@/components/effects/like-button";
 import { ViewCounter } from "@/components/effects/view-counter";
+import { Eyebrow } from "@/components/eyebrow";
 import { ProjectModal } from "@/components/project-modal";
 import { projects, type Project } from "@/lib/data";
 
@@ -35,7 +36,7 @@ function ProjectCard({ p, idx, onOpen }: { p: Project; idx: number; onOpen: (p: 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
       transition={{ duration: 0.7, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative h-full cursor-pointer overflow-hidden rounded-2xl border border-border/40 bg-card/40 p-6 backdrop-blur transition hover:border-primary/40 sm:p-8"
+      className="cinema-card group relative h-full cursor-pointer overflow-hidden rounded-2xl p-6 backdrop-blur sm:p-8"
     >
       <motion.div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" style={{ background: bg }} aria-hidden />
       <div className="absolute -right-24 -top-24 h-48 w-48 rounded-full bg-primary/10 blur-3xl transition-all duration-700 group-hover:scale-150 group-hover:bg-primary/20" aria-hidden />
@@ -51,8 +52,8 @@ function ProjectCard({ p, idx, onOpen }: { p: Project; idx: number; onOpen: (p: 
           <p className="mt-1 text-sm text-primary/90 sm:text-base">{p.tagline}</p>
         </div>
         <div className="shrink-0 rounded-xl border border-border/60 bg-background/60 px-3 py-2 text-right backdrop-blur">
-          <div className="font-display text-lg font-semibold tracking-tight">
-            <span className="gradient-text">{p.metric.value}</span>
+          <div className="font-display text-lg font-semibold tracking-tight text-[var(--primary)]">
+            {p.metric.value}
           </div>
           <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
             {p.metric.label}
@@ -111,16 +112,13 @@ export function Projects() {
       <SectionWatermark num="03" align="right" />
       <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6">
         <Reveal>
-          <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-            <span className="h-px w-8 bg-primary" />
-            03 · Selected projects
-          </div>
+          <Eyebrow>03 · Selected projects</Eyebrow>
         </Reveal>
-        <h2 className="mt-8 font-display text-balance text-[clamp(2rem,5vw,3.75rem)] font-semibold leading-[1.1] tracking-[-0.03em]">
+        <h2 className="mt-8 font-display text-balance text-[clamp(2.25rem,5.5vw,4rem)] font-semibold leading-[1.1] tracking-[-0.03em]">
           <SplitTextSegmented
             segments={[
               { text: "Things I've" },
-              { text: " shipped.", className: "gradient-text" },
+              { text: " shipped.", className: "text-[var(--primary)]" },
             ]}
           />
         </h2>

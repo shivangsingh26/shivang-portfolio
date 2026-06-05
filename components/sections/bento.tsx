@@ -2,16 +2,10 @@
 
 import { motion } from "motion/react";
 import { useRef } from "react";
-import dynamic from "next/dynamic";
 import { Code2, Coffee, Music2, Github, Zap, MapPin, Cpu } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
-
-const FloatingShapes3D = dynamic(
-  () =>
-    import("@/components/effects/floating-shapes-3d").then((m) => m.FloatingShapes3D),
-  { ssr: false }
-);
+import { Eyebrow } from "@/components/eyebrow";
 
 const NOW_STACK = ["Gemini 2.5 Pro", "Claude 4.6", "FastAPI", "Kubernetes", "PyTorch", "Pydantic"];
 
@@ -19,7 +13,7 @@ function Cell({
   className = "",
   children,
   delay = 0,
-  hue = "oklch(0.72 0.20 250 / 0.20)",
+  hue = "oklch(0.68 0.16 254 / 0.20)",
 }: {
   className?: string;
   children: React.ReactNode;
@@ -42,7 +36,7 @@ function Cell({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
       transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
-      className={`group relative overflow-hidden rounded-2xl border border-border bg-card/40 backdrop-blur transition-colors hover:border-foreground/20 ${className}`}
+      className={`cinema-card group relative overflow-hidden rounded-2xl backdrop-blur ${className}`}
     >
       <div
         aria-hidden
@@ -58,23 +52,16 @@ function Cell({
 
 export function Bento() {
   return (
-    <section className="relative w-full py-28 sm:py-36">
-      {/* 3D drifting polyhedra layer */}
-      <div className="pointer-events-none absolute inset-0 -z-10 opacity-40">
-        <FloatingShapes3D />
-      </div>
+    <section className="relative w-full py-32 sm:py-44">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
         <Reveal>
-          <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-            <span className="h-px w-8 bg-[var(--coral)]" />
-            ★ Snapshot
-          </div>
+          <Eyebrow>Snapshot</Eyebrow>
         </Reveal>
-        <h2 className="mt-8 font-display text-balance text-[clamp(2rem,5vw,3.75rem)] font-semibold leading-[1.1] tracking-[-0.03em]">
+        <h2 className="mt-8 font-display text-balance text-[clamp(2.25rem,5.5vw,4rem)] font-semibold leading-[1.1] tracking-[-0.03em]">
           <SplitTextSegmented
             segments={[
               { text: "A quick" },
-              { text: " look", className: "aurora-text" },
+              { text: " look", className: "text-[var(--primary)]" },
               { text: " at where I am." },
             ]}
           />
@@ -83,14 +70,14 @@ export function Bento() {
         <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3 md:grid-rows-[auto_auto_auto] md:gap-5">
           {/* Big — Currently building */}
           <Cell className="md:col-span-2 md:row-span-2 p-6 sm:p-8">
-            <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full opacity-60 blur-3xl"
-              style={{ background: "radial-gradient(circle, oklch(0.68 0.22 290 / 0.35), transparent 70%)" }} />
+            <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full opacity-50 blur-3xl"
+              style={{ background: "radial-gradient(circle, oklch(0.68 0.18 290 / 0.30), transparent 70%)" }} />
             <div className="relative">
               <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                 <Cpu className="h-3.5 w-3.5 text-[var(--violet)]" /> Currently building
               </div>
-              <h3 className="mt-4 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-                <span className="aurora-text">Bodhi Atomize</span>
+              <h3 className="mt-4 font-display text-3xl font-semibold tracking-tight sm:text-4xl text-foreground">
+                Bodhi Atomize
               </h3>
               <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
                 Production multimodal GenAI platform decomposing 10,000+ marketing assets
@@ -123,7 +110,7 @@ export function Bento() {
           {/* Location */}
           <Cell className="p-6" delay={0.05}>
             <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              <MapPin className="h-3.5 w-3.5 text-[var(--coral)]" /> Based in
+              <MapPin className="h-3.5 w-3.5 text-[var(--primary)]" /> Based in
             </div>
             <div className="mt-3 font-display text-2xl font-semibold tracking-tight">
               Bengaluru, IN
@@ -178,7 +165,7 @@ export function Bento() {
           {/* Stack */}
           <Cell className="p-6" delay={0.15}>
             <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              <Code2 className="h-3.5 w-3.5 text-[var(--teal)]" /> Daily driver
+              <Code2 className="h-3.5 w-3.5 text-[var(--primary)]" /> Daily driver
             </div>
             <div className="mt-3 font-display text-2xl font-semibold tracking-tight">
               Python
@@ -202,17 +189,17 @@ export function Bento() {
           {/* Now reading / vibe */}
           <Cell className="p-6" delay={0.2}>
             <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              <Coffee className="h-3.5 w-3.5 text-[var(--amber)]" /> Currently
+              <Coffee className="h-3.5 w-3.5 text-[var(--violet)]" /> Currently
             </div>
             <p className="mt-3 text-sm leading-relaxed text-foreground">
               Obsessed with{" "}
               <span className="text-[var(--primary)]">structured outputs</span>,{" "}
               <span className="text-[var(--violet)]">LLM evaluation</span>, and{" "}
-              <span className="text-[var(--coral)]">production reliability</span>{" "}
+              <span className="text-foreground">production reliability</span>{" "}
               under burst traffic.
             </p>
             <div className="mt-4 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70">
-              <Zap className="h-3 w-3 text-[var(--amber)]" /> Shipping daily
+              <Zap className="h-3 w-3 text-[var(--primary)]" /> Shipping daily
             </div>
           </Cell>
 
@@ -235,41 +222,13 @@ export function Bento() {
                     ease: "easeInOut",
                     delay: i * 0.07,
                   }}
-                  className="w-1 origin-bottom rounded-full bg-gradient-to-t from-[var(--violet)] to-[var(--coral)]"
+                  className="w-1 origin-bottom rounded-full bg-gradient-to-t from-[var(--violet)] to-[var(--primary)]"
                   style={{ height: `${h * 100}%` }}
                 />
               ))}
             </div>
           </Cell>
 
-          {/* Stats compact */}
-          <Cell className="md:col-span-3 p-6 sm:p-7" delay={0.3}>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              {[
-                { v: "95%", l: "manual time cut", c: "var(--primary)" },
-                { v: "10K+", l: "assets analyzed", c: "var(--violet)" },
-                { v: "1K+", l: "concurrent req", c: "var(--coral)" },
-                { v: "$0.06", l: "per Dossier app", c: "var(--amber)" },
-              ].map((s, i) => (
-                <motion.div
-                  key={s.l}
-                  initial={{ opacity: 0, y: 8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.05 * i, duration: 0.5 }}
-                  className="flex flex-col"
-                >
-                  <span
-                    className="font-display text-3xl font-semibold tracking-tight sm:text-4xl"
-                    style={{ color: s.c }}
-                  >
-                    {s.v}
-                  </span>
-                  <span className="mt-1 text-xs text-muted-foreground">{s.l}</span>
-                </motion.div>
-              ))}
-            </div>
-          </Cell>
         </div>
       </div>
     </section>

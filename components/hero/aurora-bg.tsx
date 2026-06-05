@@ -18,8 +18,8 @@ export function AuroraBg() {
         .aurora-blob {
           position: absolute;
           border-radius: 50%;
-          filter: blur(80px);
-          opacity: 0.55;
+          filter: blur(96px);
+          opacity: 0.32;
           will-change: transform;
           mix-blend-mode: screen;
         }
@@ -28,34 +28,35 @@ export function AuroraBg() {
           height: 60vw;
           left: -20vw;
           top: -20vh;
-          background: radial-gradient(circle, oklch(0.65 0.22 270) 0%, transparent 70%);
-          animation: drift-1 24s ease-in-out infinite alternate;
+          background: radial-gradient(circle, oklch(0.62 0.18 290) 0%, transparent 70%);
+          animation: drift-1 28s ease-in-out infinite alternate;
         }
         .aurora-blob-2 {
           width: 55vw;
           height: 55vw;
           right: -15vw;
           top: -10vh;
-          background: radial-gradient(circle, oklch(0.72 0.20 250) 0%, transparent 70%);
-          animation: drift-2 28s ease-in-out infinite alternate;
+          background: radial-gradient(circle, oklch(0.68 0.16 254) 0%, transparent 70%);
+          animation: drift-2 32s ease-in-out infinite alternate;
+          opacity: 0.28;
         }
         .aurora-blob-3 {
           width: 65vw;
           height: 65vw;
           left: 15vw;
           bottom: -30vh;
-          background: radial-gradient(circle, oklch(0.68 0.22 12) 0%, transparent 70%);
-          animation: drift-3 30s ease-in-out infinite alternate;
-          opacity: 0.45;
+          background: radial-gradient(circle, oklch(0.60 0.16 275) 0%, transparent 70%);
+          animation: drift-3 34s ease-in-out infinite alternate;
+          opacity: 0.22;
         }
         .aurora-blob-4 {
           width: 50vw;
           height: 50vw;
           right: -10vw;
           bottom: -20vh;
-          background: radial-gradient(circle, oklch(0.78 0.18 180) 0%, transparent 70%);
-          animation: drift-4 26s ease-in-out infinite alternate;
-          opacity: 0.4;
+          background: radial-gradient(circle, oklch(0.66 0.14 240) 0%, transparent 70%);
+          animation: drift-4 30s ease-in-out infinite alternate;
+          opacity: 0.20;
         }
         @keyframes drift-1 {
           from { transform: translate(0, 0) scale(1); }

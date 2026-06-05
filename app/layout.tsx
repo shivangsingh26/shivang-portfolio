@@ -3,14 +3,12 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { LenisProvider } from "@/components/providers/lenis-provider";
 import { Cursor } from "@/components/effects/cursor";
-import { EasterEgg } from "@/components/effects/easter-egg";
 import { FloatingOrbs } from "@/components/effects/floating-orbs";
-import { FloatingGlyphs } from "@/components/effects/floating-glyphs";
 import { ScrollProgress } from "@/components/effects/scroll-progress";
 import { QuickDock } from "@/components/effects/quick-dock";
-import { CursorTrail } from "@/components/effects/cursor-trail";
 import { StatusBanner } from "@/components/effects/status-banner";
-import { ConfettiLayer } from "@/components/effects/confetti";
+import { PageVignette } from "@/components/effects/page-vignette";
+import { ScrollTemp } from "@/components/effects/scroll-temp";
 import { ResumeModal } from "@/components/resume-modal";
 import { PageTransition } from "@/components/page-transition";
 import { profile } from "@/lib/data";
@@ -80,19 +78,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body className="font-sans bg-background text-foreground antialiased grain selection:bg-primary/30">
+        <ScrollTemp />
         <StatusBanner />
         <ScrollProgress />
         <FloatingOrbs />
-        <FloatingGlyphs />
-        <CursorTrail />
         <LenisProvider>
           <PageTransition>{children}</PageTransition>
         </LenisProvider>
         <Cursor />
         <QuickDock />
-        <ConfettiLayer />
+        <PageVignette />
         <ResumeModal />
-        <EasterEgg />
         <Analytics />
         <SpeedInsights />
       </body>

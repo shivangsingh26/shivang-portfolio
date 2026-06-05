@@ -31,38 +31,51 @@
   --color-coral: var(--coral);
   --color-teal: var(--teal);
   --color-amber: var(--amber);
+  --color-card-elevated: var(--card-elevated);
 
   --radius-xs: calc(var(--radius) * 0.5);
   --radius-sm: calc(var(--radius) * 0.75);
   --radius-md: calc(var(--radius) * 0.875);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.5);
+
+  --shadow-cinema: 0 1px 0 oklch(1 0 0 / 0.04) inset,
+    0 24px 60px -24px oklch(0 0 0 / 0.55),
+    0 8px 24px -12px oklch(0 0 0 / 0.4);
+  --shadow-cinema-hover: 0 1px 0 oklch(1 0 0 / 0.06) inset,
+    0 36px 80px -28px oklch(0 0 0 / 0.6),
+    0 10px 30px -12px oklch(0 0 0 / 0.45);
 }
 
 :root {
-  --background: oklch(0.075 0 0);
+  /* Scroll-driven hue drift hook (cool → warm → cool). Set by ScrollTemp. */
+  --bg-hue: 254;
+
+  --background: oklch(0.055 0 0);
   --foreground: oklch(0.98 0 0);
-  --card: oklch(0.105 0 0);
+  --card: oklch(0.085 0 0);
+  --card-elevated: oklch(0.11 0 0);
   --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.105 0 0);
+  --popover: oklch(0.11 0 0);
   --popover-foreground: oklch(0.98 0 0);
-  --primary: oklch(0.66 0.18 254);
+  --primary: oklch(0.68 0.16 var(--bg-hue));
   --primary-foreground: oklch(0.06 0 0);
-  --violet: oklch(0.68 0.22 290);
-  --coral: oklch(0.72 0.20 18);
-  --teal: oklch(0.74 0.16 190);
-  --amber: oklch(0.78 0.15 70);
-  --secondary: oklch(0.16 0 0);
+  --violet: oklch(0.70 0.18 295);
+  /* Demoted: data-viz only — do not use decoratively. */
+  --coral: oklch(0.74 0.18 18);
+  --teal: oklch(0.74 0.14 190);
+  --amber: oklch(0.80 0.13 70);
+  --secondary: oklch(0.12 0 0);
   --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.14 0 0);
-  --muted-foreground: oklch(0.72 0 0);
-  --accent: oklch(0.18 0 0);
+  --muted: oklch(0.11 0 0);
+  --muted-foreground: oklch(0.70 0 0);
+  --accent: oklch(0.14 0 0);
   --accent-foreground: oklch(0.98 0 0);
   --destructive: oklch(0.59 0.22 27);
-  --border: oklch(1 0 0 / 0.10);
-  --input: oklch(1 0 0 / 0.14);
-  --ring: oklch(0.66 0.18 254);
-  --glow: oklch(0.72 0.16 230);
+  --border: oklch(1 0 0 / 0.06);
+  --input: oklch(1 0 0 / 0.10);
+  --ring: oklch(0.68 0.16 254);
+  --glow: oklch(0.72 0.14 var(--bg-hue));
   --radius: 0.625rem;
 }
 
@@ -105,8 +118,68 @@
     inset: 0;
     pointer-events: none;
     z-index: 100;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
     mix-blend-mode: overlay;
+  }
+
+  /* Eyebrow — single canonical small-cap label across all sections. */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+  .eyebrow::before {
+    content: "";
+    display: inline-block;
+    width: 2rem;
+    height: 1px;
+    background: linear-gradient(90deg, var(--primary), transparent);
+  }
+
+  /* Cinema card — premium surface with layered shadow. */
+  .cinema-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-cinema);
+    transition: box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 300ms ease, transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .cinema-card:hover {
+    box-shadow: var(--shadow-cinema-hover);
+    border-color: oklch(1 0 0 / 0.10);
+    transform: translateY(-2px);
+  }
+
+  /* Page corner vignette — soft cinematic frame. */
+  .page-vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 90;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 50%, transparent 55%, oklch(0 0 0 / 0.45) 100%),
+      radial-gradient(circle at 0% 0%, oklch(0 0 0 / 0.35), transparent 35%),
+      radial-gradient(circle at 100% 0%, oklch(0 0 0 / 0.35), transparent 35%),
+      radial-gradient(circle at 0% 100%, oklch(0 0 0 / 0.4), transparent 40%),
+      radial-gradient(circle at 100% 100%, oklch(0 0 0 / 0.4), transparent 40%);
+    mix-blend-mode: multiply;
+  }
+
+  /* Hairline section separator. */
+  .section-hairline {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      oklch(1 0 0 / 0.10) 50%,
+      transparent 100%
+    );
   }
 
   .glow {

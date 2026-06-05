@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { Sparkles, ArrowUpRight, MessageSquare } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
+import { Eyebrow } from "@/components/eyebrow";
 import { dispatchOpenChat } from "@/lib/events";
 import { track } from "@/lib/telemetry";
 
@@ -30,44 +31,41 @@ export function AIConcierge() {
   };
 
   return (
-    <section id="ai-concierge" className="relative w-full py-28 sm:py-36">
+    <section id="ai-concierge" className="relative w-full py-32 sm:py-44">
       <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
         <Reveal>
-          <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-            <span className="h-px w-8 bg-[var(--coral)]" />
-            ★ AI Concierge
-          </div>
+          <Eyebrow>AI Concierge</Eyebrow>
         </Reveal>
 
-        <div className="relative mt-8 overflow-hidden rounded-3xl border border-border bg-card/40 backdrop-blur">
-          {/* animated aurora border */}
+        <div className="cinema-card relative mt-8 overflow-hidden rounded-3xl backdrop-blur">
+          {/* tamed conic border — violet/primary only */}
           <div aria-hidden className="pointer-events-none absolute inset-0 rounded-3xl">
             <div
-              className="absolute -inset-px rounded-3xl opacity-60"
+              className="absolute -inset-px rounded-3xl opacity-40"
               style={{
                 background:
-                  "conic-gradient(from 0deg, oklch(0.66 0.18 254 / 0.4), oklch(0.68 0.22 290 / 0.5), oklch(0.72 0.20 18 / 0.4), oklch(0.78 0.15 70 / 0.3), oklch(0.66 0.18 254 / 0.4))",
-                animation: "spin 14s linear infinite",
+                  "conic-gradient(from 0deg, oklch(0.68 0.16 254 / 0.5), oklch(0.70 0.18 295 / 0.5), oklch(0.68 0.16 254 / 0.3), oklch(0.70 0.18 295 / 0.5), oklch(0.68 0.16 254 / 0.5))",
+                animation: "spin 18s linear infinite",
               }}
             />
             <div className="absolute inset-[1px] rounded-3xl bg-background/95" />
           </div>
 
-          {/* inner glow blob */}
+          {/* inner glow blobs — primary/violet */}
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full opacity-50 blur-3xl"
+            className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full opacity-35 blur-3xl"
             style={{
               background:
-                "radial-gradient(circle, oklch(0.68 0.22 290 / 0.5), transparent 70%)",
+                "radial-gradient(circle, oklch(0.70 0.18 295 / 0.45), transparent 70%)",
             }}
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute -left-20 -bottom-20 h-56 w-56 rounded-full opacity-50 blur-3xl"
+            className="pointer-events-none absolute -left-20 -bottom-20 h-56 w-56 rounded-full opacity-30 blur-3xl"
             style={{
               background:
-                "radial-gradient(circle, oklch(0.72 0.20 18 / 0.5), transparent 70%)",
+                "radial-gradient(circle, oklch(0.68 0.16 254 / 0.5), transparent 70%)",
             }}
           />
 
@@ -84,11 +82,11 @@ export function AIConcierge() {
                 </span>
               </div>
 
-              <h2 className="mt-5 font-display text-balance text-[clamp(2rem,4.5vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.035em]">
+              <h2 className="mt-5 font-display text-balance text-[clamp(2.25rem,5vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.035em]">
                 <SplitTextSegmented
                   segments={[
                     { text: "Don't read the resume." },
-                    { text: " Talk to it.", className: "aurora-text" },
+                    { text: " Talk to it.", className: "text-[var(--violet)]" },
                   ]}
                 />
               </h2>
@@ -108,7 +106,7 @@ export function AIConcierge() {
                   data-cursor="hover"
                   className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-5 py-3 text-sm font-medium text-background transition"
                 >
-                  <span className="absolute inset-0 -z-10 bg-gradient-to-tr from-[var(--violet)] via-[var(--primary)] to-[var(--coral)]" />
+                  <span className="absolute inset-0 -z-10 bg-gradient-to-tr from-[var(--violet)] to-[var(--primary)]" />
                   <Sparkles className="h-4 w-4" />
                   Start chatting
                   <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

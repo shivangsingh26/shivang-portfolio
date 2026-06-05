@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
 import { Counter } from "@/components/motion/counter";
+import { Eyebrow } from "@/components/eyebrow";
 import { profile, stats } from "@/lib/data";
 
 const LiquidBlob3D = dynamic(
@@ -32,7 +33,7 @@ function StatCard({ value, label, idx }: { value: string; label: string; idx: nu
       viewport={{ once: true, margin: "-20%" }}
       transition={{ duration: 0.7, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -4 }}
-      className="group relative overflow-hidden rounded-2xl border border-border/40 bg-card/40 p-6 backdrop-blur transition hover:border-primary/40"
+      className="cinema-card group relative overflow-hidden rounded-2xl p-6 backdrop-blur"
     >
       <div
         aria-hidden
@@ -45,8 +46,8 @@ function StatCard({ value, label, idx }: { value: string; label: string; idx: nu
       <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
         / {String(idx + 1).padStart(2, "0")}
       </div>
-      <div className="mt-4 font-display text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">
-        <Counter value={value} className="gradient-text" />
+      <div className="mt-4 font-display text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl text-[var(--primary)]">
+        <Counter value={value} />
       </div>
       <div className="mt-3 text-sm leading-snug text-muted-foreground">{label}</div>
     </motion.div>
@@ -62,22 +63,19 @@ export function About() {
     <section id="about" ref={ref} className="relative w-full py-32 sm:py-44">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
         <Reveal>
-          <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-            <span className="h-px w-8 bg-primary" />
-            01 · About
-          </div>
+          <Eyebrow>01 · About</Eyebrow>
         </Reveal>
 
         <div className="mt-10 grid gap-12 md:grid-cols-12 md:gap-16">
           <div className="md:col-span-7">
             <motion.h2
               style={{ y }}
-              className="font-display text-balance text-[clamp(2rem,5vw,3.75rem)] font-semibold leading-[1.1] tracking-[-0.03em]"
+              className="font-display text-balance text-[clamp(2.25rem,5.5vw,4rem)] font-semibold leading-[1.1] tracking-[-0.03em]"
             >
               <SplitTextSegmented
                 segments={[
                   { text: "I build LLM systems that" },
-                  { text: " survive production traffic.", className: "gradient-text" },
+                  { text: " survive production traffic.", className: "text-[var(--primary)]" },
                 ]}
               />
             </motion.h2>
@@ -117,8 +115,8 @@ export function About() {
           </div>
 
           <div className="relative self-start md:col-span-5">
-            {/* 3D liquid blob accent */}
-            <div className="pointer-events-none absolute -inset-8 -z-10 opacity-50">
+            {/* Liquid blob accent — subtle ambient depth */}
+            <div className="pointer-events-none absolute -inset-8 -z-10 opacity-30">
               <LiquidBlob3D />
             </div>
             <div className="grid grid-cols-2 gap-3 md:gap-4">

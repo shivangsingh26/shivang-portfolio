@@ -11,6 +11,7 @@ const ScrollMesh3D = dynamic(
 import { Reveal } from "@/components/motion/reveal";
 import { SplitTextSegmented } from "@/components/motion/split-text";
 import { Magnetic } from "@/components/motion/magnetic";
+import { Eyebrow } from "@/components/eyebrow";
 import { profile } from "@/lib/data";
 import { track } from "@/lib/telemetry";
 
@@ -50,17 +51,14 @@ export function Contact() {
       </div>
       <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6">
         <Reveal>
-          <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-            <span className="h-px w-8 bg-primary" />
-            06 · Get in touch
-          </div>
+          <Eyebrow>06 · Get in touch</Eyebrow>
         </Reveal>
 
         <h2 className="mt-10 font-display text-balance text-[clamp(2.25rem,7vw,6rem)] font-semibold leading-[1.05] tracking-[-0.04em]">
           <SplitTextSegmented
             segments={[
               { text: "Let's build something" },
-              { text: " that ships.", className: "gradient-text" },
+              { text: " that ships.", className: "text-[var(--primary)]" },
             ]}
           />
         </h2>
@@ -134,7 +132,7 @@ export function Contact() {
               transition={{ duration: 0.5, delay: i * 0.06 }}
               whileHover={{ y: -3 }}
               onClick={() => track("social_click", { network: c.label.toLowerCase() })}
-              className="group flex items-center justify-between rounded-xl border border-border/40 bg-card/40 p-4 backdrop-blur transition hover:border-primary/40"
+              className="cinema-card group flex items-center justify-between rounded-2xl p-4 backdrop-blur"
             >
               <div className="flex min-w-0 items-center gap-3">
                 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-border/60 bg-background/60 transition group-hover:border-primary/40 group-hover:text-primary">
