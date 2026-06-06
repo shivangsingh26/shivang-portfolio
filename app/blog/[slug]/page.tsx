@@ -8,6 +8,7 @@ import { Markdown } from "@/components/markdown";
 import { ReadingProgress } from "@/components/blog/reading-progress";
 import { TOC } from "@/components/blog/toc";
 import { PostNav } from "@/components/blog/post-nav";
+import { FooterMini } from "@/components/footer-mini";
 import { profile } from "@/lib/data";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -59,11 +60,22 @@ export default async function BlogPost({ params }: Props) {
       <ReadingProgress />
       <BlogNav />
 
+      {/* Subtle hero glow behind post title */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-24 -z-10 h-[360px] w-[640px] -translate-x-1/2 rounded-full opacity-30 blur-3xl"
+        style={{
+          background:
+            "radial-gradient(ellipse, oklch(0.68 0.16 254 / 0.18), oklch(0.70 0.18 295 / 0.10) 50%, transparent 75%)",
+        }}
+      />
+
       <div className="mx-auto grid w-full max-w-6xl grid-cols-1 px-4 pt-32 pb-24 sm:px-6 md:pt-40 xl:grid-cols-[minmax(0,1fr)_240px] xl:gap-12">
         <article className="mx-auto w-full max-w-3xl">
           <Link
             href="/blog"
             className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-foreground"
+            data-cursor="hover"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             back to blog
@@ -100,7 +112,15 @@ export default async function BlogPost({ params }: Props) {
             </div>
           </div>
 
-          <div className="mt-12 h-px w-full bg-border" />
+          {/* Refined gradient divider */}
+          <div
+            aria-hidden
+            className="mt-12 h-px w-full"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, oklch(1 0 0 / 0.10) 30%, oklch(0.68 0.16 254 / 0.4) 50%, oklch(1 0 0 / 0.10) 70%, transparent)",
+            }}
+          />
 
           <div className="mt-12 prose-blog">
             <Markdown content={post.content} />
@@ -108,7 +128,7 @@ export default async function BlogPost({ params }: Props) {
 
           <PostNav prev={prev} next={next} />
 
-          <div className="mt-16 border-t border-border pt-8">
+          <div className="cinema-card mt-16 rounded-2xl p-6 backdrop-blur">
             <div className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
               Written by
             </div>
@@ -145,6 +165,8 @@ export default async function BlogPost({ params }: Props) {
 
         <TOC />
       </div>
+
+      <FooterMini />
     </main>
   );
 }
