@@ -104,9 +104,8 @@ export function AIConcierge() {
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.97 }}
                   data-cursor="hover"
-                  className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-5 py-3 text-sm font-medium text-background transition"
+                  className="group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-tr from-[var(--violet)] to-[var(--primary)] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[var(--violet)]/25 transition hover:shadow-[var(--violet)]/50 hover:brightness-110"
                 >
-                  <span className="absolute inset-0 -z-10 bg-gradient-to-tr from-[var(--violet)] to-[var(--primary)]" />
                   <Sparkles className="h-4 w-4" />
                   Start chatting
                   <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

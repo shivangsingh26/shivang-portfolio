@@ -101,9 +101,7 @@ export function Contact() {
             </Magnetic>
             <Magnetic>
               <a
-                href={`https://cal.com/${profile.linkedin}/intro`}
-                target="_blank"
-                rel="noreferrer"
+                href={`mailto:${profile.email}?subject=${encodeURIComponent("30-min intro call")}&body=${encodeURIComponent("Hi Shivang,\n\nI'd love to grab 30 minutes to talk about ")}`}
                 data-cursor="hover"
                 onClick={() => track("cta_click", { target: "cal_book", location: "contact" })}
                 className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/40 px-6 py-3.5 text-sm font-medium backdrop-blur transition hover:border-[var(--violet)]/60 hover:text-[var(--violet)]"

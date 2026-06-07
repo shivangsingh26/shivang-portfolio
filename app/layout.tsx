@@ -11,6 +11,7 @@ import { PageVignette } from "@/components/effects/page-vignette";
 import { ScrollTemp } from "@/components/effects/scroll-temp";
 import { ResumeModal } from "@/components/resume-modal";
 import { PageTransition } from "@/components/page-transition";
+import { ChatRoot } from "@/components/chat/chat-root";
 import { profile } from "@/lib/data";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -85,6 +86,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LenisProvider>
           <PageTransition>{children}</PageTransition>
         </LenisProvider>
+        <ChatRoot />
         <Cursor />
         <QuickDock />
         <PageVignette />

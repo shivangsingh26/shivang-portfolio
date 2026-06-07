@@ -11,7 +11,6 @@ import { AIConcierge } from "@/components/sections/ai-concierge";
 import { MegaStats } from "@/components/sections/mega-stats";
 import { SectionRail } from "@/components/section-rail";
 import { SectionHairline } from "@/components/section-hairline";
-import { ChatRoot } from "@/components/chat/chat-root";
 
 export default function Page() {
   return (
@@ -31,7 +30,6 @@ export default function Page() {
       <AIConcierge />
       <LatestBlog />
       <Contact />
-      <ChatRoot />
     </main>
   );
 }
