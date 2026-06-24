@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { ArrowDown, ArrowUpRight, MapPin, Sparkles, Cpu, BadgeCheck } from "lucide-react";
@@ -9,14 +8,9 @@ import { Magnetic } from "@/components/motion/magnetic";
 import { TypingText } from "@/components/motion/typing-text";
 import { AuroraBg } from "@/components/hero/aurora-bg";
 import { HeroSpotlight } from "@/components/effects/hero-spotlight";
-import { OrbitRing } from "@/components/effects/orbit-ring";
+import { HeroPanel } from "@/components/hero/hero-panel";
 import { dispatchOpenChat } from "@/lib/events";
 import { track } from "@/lib/telemetry";
-
-const Globe = dynamic(() => import("@/components/hero/globe").then((m) => m.Globe), {
-  ssr: false,
-  loading: () => null,
-});
 
 const ROLES = ["AI Engineer", "GenAI Architect", "ML Systems Builder", "LLM Infra Engineer"];
 
@@ -34,7 +28,8 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
   const auroraOpacity = useTransform(scrollYProgress, [0, 0.6, 1], [1, 0.6, 0.2]);
   const contentY = useTransform(scrollYProgress, [0, 1], ["0%", reduceMotion ? "0%" : "-10%"]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.6, 1], [1, 0.6, 0]);
-  const globeScale = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 0.86]);
+  const panelScale = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 0.9]);
+  const panelY = useTransform(scrollYProgress, [0, 1], ["0%", reduceMotion ? "0%" : "6%"]);
 
   return (
     <section
@@ -186,38 +181,24 @@ export function Hero({ onOpenChat = dispatchOpenChat }: { onOpenChat?: () => voi
           </motion.div>
         </div>
 
-        {/* RIGHT: Globe — single statement element, scroll-scaled */}
+        {/* RIGHT: Pipeline console — bespoke signature visual, scroll-scaled */}
         <motion.div
-          style={{ scale: globeScale }}
+          initial={{ opacity: 0, y: 24, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          style={{ scale: panelScale, y: panelY }}
           className="relative flex items-center justify-center lg:justify-end"
         >
           <div className="relative">
             <div
               aria-hidden
-              className="absolute -inset-10 -z-10 rounded-full opacity-50 blur-3xl"
+              className="absolute -inset-10 -z-10 rounded-full opacity-60 blur-3xl"
               style={{
                 background:
-                  "radial-gradient(circle, oklch(0.66 0.16 254 / 0.22), oklch(0.68 0.18 295 / 0.12) 50%, transparent 80%)",
+                  "radial-gradient(circle, color-mix(in oklch, var(--primary) 20%, transparent), transparent 70%)",
               }}
             />
-            <OrbitRing size={620} />
-            <Globe size={520} />
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1, duration: 0.6 }}
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full border border-border bg-background/80 px-3 py-1.5 backdrop-blur"
-            >
-              <div className="flex items-center gap-2">
-                <span className="relative inline-flex h-1.5 w-1.5">
-                  <span className="absolute inset-0 animate-ping rounded-full bg-[var(--primary)] opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--primary)]" />
-                </span>
-                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Bengaluru · 12.97°N 77.59°E
-                </span>
-              </div>
-            </motion.div>
+            <HeroPanel />
           </div>
         </motion.div>
       </motion.div>
