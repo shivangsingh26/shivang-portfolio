@@ -93,7 +93,17 @@ export const experiences: Experience[] = [
   },
 ];
 
+export type CaseStudy = {
+  problem: string;
+  role?: string;
+  approach: { title: string; detail: string }[];
+  architecture?: string[];
+  results: { value: string; label: string }[];
+  links?: { label: string; href: string }[];
+};
+
 export type Project = {
+  slug: string;
   name: string;
   tagline: string;
   description: string;
@@ -101,10 +111,12 @@ export type Project = {
   stack: string[];
   github?: string;
   highlight?: boolean;
+  caseStudy?: CaseStudy;
 };
 
 export const projects: Project[] = [
   {
+    slug: "dossier",
     name: "Dossier",
     tagline: "Quality-first agentic job-search SaaS",
     description:
@@ -125,8 +137,51 @@ export const projects: Project[] = [
     ],
     github: "https://github.com/shivangsingh26/dossier",
     highlight: true,
+    caseStudy: {
+      role: "Solo build · 2026",
+      problem:
+        "Job search is high-effort and low-signal: hundreds of listings, most irrelevant, and tailoring a resume per role eats hours. I wanted a system that finds, scores, and researches roles autonomously — then produces an ATS-ready resume — for cents per run, not dollars.",
+      approach: [
+        {
+          title: "8-agent autonomous pipeline",
+          detail:
+            "Persona Builder, Job Discovery, Watchlist, Company Intel, Gap Analysis, Market Intel, Resume Agent and Referral Finder — each a bounded agent with typed inputs and outputs, composed into one run.",
+        },
+        {
+          title: "Cost-first model routing",
+          detail:
+            "A pre-LLM rule filter drops ~60% of jobs at zero cost before any model call. Cheap models triage; expensive models only finish the shortlist — keeping a full run near $0.04.",
+        },
+        {
+          title: "3-pass self-evaluating resumes",
+          detail:
+            "Claude Sonnet tailors → Haiku critiques → Sonnet revises, emitting ATS-optimised LaTeX. A self-evaluation loop replaces one-shot generation.",
+        },
+        {
+          title: "CLI → multi-user SaaS",
+          detail:
+            "M2+ wraps the pipeline in Next.js 16 + FastAPI + Clerk with credits, SSE progress streaming and an async worker for concurrent runs.",
+        },
+      ],
+      architecture: [
+        "Profile + persona",
+        "Rule filter (−60% at $0)",
+        "Scored discovery · 79 cos",
+        "Company + market intel",
+        "3-pass LaTeX resume",
+        "SSE → live UI",
+      ],
+      results: [
+        { value: "~$0.04", label: "per full pipeline run" },
+        { value: "79", label: "companies hand-scored" },
+        { value: "~60%", label: "jobs dropped pre-LLM at $0" },
+        { value: "3-pass", label: "self-evaluating resume gen" },
+      ],
+      links: [{ label: "GitHub", href: "https://github.com/shivangsingh26/dossier" }],
+    },
   },
   {
+    slug: "fedfv-cv",
     name: "FedFV-CV",
     tagline: "Federated Deep Learning for Biometric Auth",
     description:
@@ -134,8 +189,32 @@ export const projects: Project[] = [
     metric: { value: "1.21%", label: "EER" },
     stack: ["PyTorch", "MobileNetV2", "Federated Learning"],
     github: "https://github.com/shivangsingh26",
+    caseStudy: {
+      role: "B.Tech Thesis · IIIT SriCity",
+      problem:
+        "Finger-vein biometrics are sensitive — centralising raw vein images to train a model is a privacy risk. The goal: train an accurate authenticator without the raw data ever leaving each client.",
+      approach: [
+        {
+          title: "Privacy-preserving federated training",
+          detail:
+            "MobileNetV2 trained across 5 clients over 122,600 images. Only model updates are shared; raw vein images never leave the device.",
+        },
+        {
+          title: "Custom FedWPR aggregation",
+          detail:
+            "A weighted-performance aggregation scheme that outperformed the FedAvg baseline on non-IID client splits, where naive averaging degrades.",
+        },
+      ],
+      results: [
+        { value: "1.21%", label: "Equal Error Rate" },
+        { value: "122.6K", label: "images · 5 clients" },
+        { value: "> FedAvg", label: "on EER benchmark" },
+      ],
+      links: [{ label: "GitHub", href: "https://github.com/shivangsingh26" }],
+    },
   },
   {
+    slug: "slack-agent",
     name: "slackAgent",
     tagline: "AI-Powered Slack Bot with RAG",
     description:
@@ -143,8 +222,31 @@ export const projects: Project[] = [
     metric: { value: "40%", label: "response time cut" },
     stack: ["FastAPI", "LlamaIndex", "ChromaDB", "OpenAI", "n8n"],
     github: "https://github.com/shivangsingh26",
+    caseStudy: {
+      problem:
+        "Teams ask the same questions that are buried across 20+ documents. The aim: answer them inside Slack, grounded in those docs, fast enough to feel native.",
+      approach: [
+        {
+          title: "RAG over team docs",
+          detail:
+            "LlamaIndex + ChromaDB semantic search across 20+ documents, served behind a FastAPI backend with grounded, citable answers.",
+        },
+        {
+          title: "Slack-native + automated",
+          detail:
+            "End-to-end automation via n8n; answers are delivered in-channel through the Slack API with no manual steps.",
+        },
+      ],
+      results: [
+        { value: "40%", label: "faster responses" },
+        { value: "50+", label: "daily queries served" },
+        { value: "20+", label: "documents indexed" },
+      ],
+      links: [{ label: "GitHub", href: "https://github.com/shivangsingh26" }],
+    },
   },
   {
+    slug: "rag-qa-aws",
     name: "RAG-QA on AWS",
     tagline: "Retrieval-Augmented QA, fully CI/CD",
     description:
@@ -152,8 +254,34 @@ export const projects: Project[] = [
     metric: { value: "70B", label: "params served" },
     stack: ["LangChain", "FAISS", "AWS Bedrock", "LLAMA 3.1-70B", "Docker", "GitHub Actions"],
     github: "https://github.com/shivangsingh26",
+    caseStudy: {
+      problem:
+        "Stand up a retrieval-augmented QA service on a 70B model that's reproducible and deployable — not a notebook demo that dies when the kernel restarts.",
+      approach: [
+        {
+          title: "LangChain + FAISS retrieval",
+          detail:
+            "Vector retrieval over a document corpus feeds AWS Bedrock LLAMA 3.1-70B, grounding answers in source context.",
+        },
+        {
+          title: "Push-to-deploy CI/CD",
+          detail:
+            "Dockerised and shipped to AWS ECR + App Runner through GitHub Actions — every push produces a reproducible deploy.",
+        },
+      ],
+      results: [
+        { value: "70B", label: "params (LLAMA 3.1)" },
+        { value: "CI/CD", label: "ECR + App Runner" },
+        { value: "Docker", label: "reproducible deploys" },
+      ],
+      links: [{ label: "GitHub", href: "https://github.com/shivangsingh26" }],
+    },
   },
 ];
+
+export function projectBySlug(slug: string): Project | undefined {
+  return projects.find((p) => p.slug === slug);
+}
 
 export const skills = {
   "LLM & GenAI": [

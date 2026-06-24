@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "motion/react";
 import { cn } from "@/lib/utils";
 import { profile } from "@/lib/data";
+import { ThemeToggle } from "@/components/theme-toggle";
 
-export function BlogNav() {
+export function BlogNav({ suffix = "blog" }: { suffix?: string } = {}) {
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
   const [scrolled, setScrolled] = useState(false);
@@ -51,10 +52,11 @@ export function BlogNav() {
               {profile.firstName.toLowerCase()}.
             </span>
             <span className="text-muted-foreground transition-colors group-hover:text-foreground">
-              /blog
+              /{suffix}
             </span>
           </Link>
           <nav className="flex items-center gap-1">
+            <ThemeToggle className="mr-1" />
             <Link
               href="/"
               data-cursor="hover"
