@@ -191,7 +191,7 @@ export function ChatWidget({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.9 }}
             transition={{ delay: 1.5, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="pointer-events-none fixed bottom-[5.75rem] right-5 z-40 hidden items-center gap-1.5 rounded-full border border-border bg-background/90 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-foreground backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.4)] sm:bottom-[6.5rem] sm:right-6 sm:flex"
+            className="pointer-events-none fixed bottom-[5.75rem] right-5 z-40 hidden items-center gap-1.5 rounded-full border border-border bg-background/90 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-foreground backdrop-blur-xl shadow-[var(--shadow-cinema-hover)] sm:bottom-[6.5rem] sm:right-6 sm:flex"
           >
             <span className="relative inline-flex h-1.5 w-1.5">
               <span className="absolute inset-0 animate-ping rounded-full bg-[var(--coral)] opacity-75" />
@@ -221,7 +221,7 @@ export function ChatWidget({
         }}
         aria-label="Open chat with Shivang's AI"
         data-cursor="hover"
-        className="group fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center overflow-hidden rounded-full border border-border bg-foreground text-background shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition hover:scale-105 sm:bottom-6 sm:right-6"
+        className="group fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center overflow-hidden rounded-full border border-border bg-foreground text-background shadow-[var(--shadow-cinema-hover)] transition hover:scale-105 sm:bottom-6 sm:right-6"
       >
         <span className="absolute inset-0 -z-10 bg-gradient-to-tr from-[var(--violet)] via-[var(--primary)] to-[var(--coral)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
         <AnimatePresence mode="wait" initial={false}>
@@ -256,7 +256,7 @@ export function ChatWidget({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.96 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed bottom-24 right-4 z-50 flex h-[min(680px,82vh)] w-[min(440px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-border bg-background/95 shadow-[0_24px_60px_rgba(0,0,0,0.6)] backdrop-blur-xl sm:right-6"
+            className="fixed bottom-24 right-4 z-50 flex h-[min(680px,82vh)] w-[min(440px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-border bg-background/95 shadow-[var(--shadow-cinema-hover)] backdrop-blur-xl sm:right-6"
           >
             <div className="relative flex items-center justify-between border-b border-border p-4">
               <div

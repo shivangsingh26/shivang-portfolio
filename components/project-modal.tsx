@@ -40,7 +40,7 @@ export function ProjectModal({ project, onClose }: Props) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-x-3 top-[5vh] z-[130] mx-auto max-h-[90vh] w-[min(960px,calc(100vw-1.5rem))] overflow-y-auto rounded-3xl border border-border bg-card/95 backdrop-blur-xl shadow-[0_30px_80px_rgba(0,0,0,0.6)]"
+            className="fixed inset-x-3 top-[5vh] z-[130] mx-auto max-h-[90vh] w-[min(960px,calc(100vw-1.5rem))] overflow-y-auto rounded-3xl border border-border bg-card/95 backdrop-blur-xl shadow-[var(--shadow-cinema-hover)]"
           >
             <div
               aria-hidden

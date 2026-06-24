@@ -28,7 +28,7 @@ export function StatusBanner() {
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="fixed inset-x-0 top-0 z-[55] flex items-center justify-center px-4 py-2"
         >
-          <div className="relative flex items-center gap-3 overflow-hidden rounded-full border border-border bg-background/85 px-4 py-1.5 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
+          <div className="relative flex items-center gap-3 overflow-hidden rounded-full border border-border bg-background/85 px-4 py-1.5 backdrop-blur-xl shadow-[var(--shadow-cinema-hover)]">
             <span
               aria-hidden
               className="absolute inset-0 -z-10 opacity-60"

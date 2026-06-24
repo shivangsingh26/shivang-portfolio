@@ -82,7 +82,7 @@ export function TargetGame() {
         className="relative h-64 overflow-hidden rounded-2xl border border-border bg-card/40 backdrop-blur"
         style={{
           backgroundImage:
-            "radial-gradient(circle, oklch(1 0 0 / 0.05) 1px, transparent 1px)",
+            "radial-gradient(circle, color-mix(in oklch, var(--foreground) 6%, transparent) 1px, transparent 1px)",
           backgroundSize: "20px 20px",
         }}
       >

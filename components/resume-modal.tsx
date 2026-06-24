@@ -61,7 +61,7 @@ export function ResumeModal() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.97 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-4 z-[100] mx-auto flex max-w-5xl flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-[0_40px_100px_rgba(0,0,0,0.7)] sm:inset-8"
+            className="fixed inset-4 z-[100] mx-auto flex max-w-5xl flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-[var(--shadow-cinema-hover)] sm:inset-8"
           >
             <header className="flex items-center justify-between border-b border-border px-5 py-4">
               <div className="flex items-center gap-3">

@@ -9,7 +9,8 @@ export type TrackEvent =
   | { name: "chat_open"; props: { source: "fab" | "hero_cta" | "palette" | "other" } }
   | { name: "chat_message"; props: { length: number } }
   | { name: "palette_open"; props: Record<string, never> }
-  | { name: "social_click"; props: { network: string } };
+  | { name: "social_click"; props: { network: string } }
+  | { name: "theme_toggle"; props: { to: "light" | "dark" } };
 
 export function track<E extends TrackEvent>(name: E["name"], props?: E["props"]) {
   try {
