@@ -360,34 +360,8 @@
     border: 1px solid var(--border);
   }
 
-  /* Hero pipeline console — sequential node light-up + travelling signal. */
-  @keyframes hero-node {
-    0%, 100% { border-color: var(--border); box-shadow: none; }
-    8% {
-      border-color: color-mix(in oklch, var(--primary) 60%, transparent);
-      box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 12%, transparent),
-        0 0 22px -2px color-mix(in oklch, var(--primary) 55%, transparent);
-    }
-    26% { border-color: var(--border); box-shadow: none; }
-  }
-  .hero-node { animation: hero-node 4s ease-in-out infinite; }
-
-  @keyframes hero-comet {
-    0% { top: 0%; opacity: 0; }
-    8% { opacity: 1; }
-    92% { opacity: 1; }
-    100% { top: 100%; opacity: 0; }
-  }
-  .hero-comet { animation: hero-comet 4s linear infinite; }
-
-  @keyframes hero-rail-fill {
-    0%, 100% { background-position: 0% 0%; }
-    50% { background-position: 0% 100%; }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .float, .marquee-x, .shimmer, .gradient-text-shift, .conic-glow, .aurora-text { animation: none; }
-    .hero-node, .hero-comet { animation: none; }
     html { scroll-behavior: auto; }
     .theme-ready *, .theme-ready *::before, .theme-ready *::after { transition: none; }
   }

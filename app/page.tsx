@@ -4,7 +4,6 @@ import { About } from "@/components/sections/about";
 import { Experience } from "@/components/sections/experience";
 import { Projects } from "@/components/sections/projects";
 import { Skills } from "@/components/sections/skills";
-import { GitHubSection } from "@/components/sections/github";
 import { Contact } from "@/components/sections/contact";
 import { Bento } from "@/components/sections/bento";
 import { LatestBlog } from "@/components/sections/latest-blog";
@@ -27,8 +26,6 @@ export default function Page() {
       <SectionHairline />
       <Projects />
       <Skills />
-      <SectionHairline />
-      <GitHubSection />
       <SectionHairline />
       <AIConcierge />
       <LatestBlog />
