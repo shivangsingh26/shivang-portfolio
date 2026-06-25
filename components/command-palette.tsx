@@ -10,6 +10,7 @@ import {
   Mail,
   MessageSquare,
   Search,
+  Briefcase,
 } from "lucide-react";
 import { navLinks, profile, projects } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -109,6 +110,17 @@ export function CommandPalette({ onOpenChat }: { onOpenChat: () => void }) {
         run: () => {
           close();
           window.open("/resume.pdf", "_blank");
+        },
+      },
+      {
+        id: "recruiters",
+        label: "For recruiters — 20-sec scan",
+        hint: "/recruiters",
+        icon: Briefcase,
+        group: "Actions",
+        run: () => {
+          close();
+          window.location.href = "/recruiters";
         },
       },
     ];
