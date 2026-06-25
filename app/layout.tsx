@@ -2,13 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { LenisProvider } from "@/components/providers/lenis-provider";
-import { Cursor } from "@/components/effects/cursor";
-import { FloatingOrbs } from "@/components/effects/floating-orbs";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ScrollProgress } from "@/components/effects/scroll-progress";
 import { QuickDock } from "@/components/effects/quick-dock";
 import { StatusBanner } from "@/components/effects/status-banner";
-import { PageVignette } from "@/components/effects/page-vignette";
-import { ScrollTemp } from "@/components/effects/scroll-temp";
 import { ResumeModal } from "@/components/resume-modal";
 import { PageTransition } from "@/components/page-transition";
 import { ChatRoot } from "@/components/chat/chat-root";
@@ -66,7 +63,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#050505",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FAFAF8" },
+    { media: "(prefers-color-scheme: dark)", color: "#16161B" },
+  ],
   width: "device-width",
   initialScale: 1,
 };
@@ -75,22 +75,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`dark ${geistSans.variable} ${geistMono.variable}`}
+      className={`${geistSans.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="font-sans bg-background text-foreground antialiased grain selection:bg-primary/30">
-        <ScrollTemp />
-        <StatusBanner />
-        <ScrollProgress />
-        <FloatingOrbs />
-        <LenisProvider>
-          <PageTransition>{children}</PageTransition>
-        </LenisProvider>
-        <ChatRoot />
-        <Cursor />
-        <QuickDock />
-        <PageVignette />
-        <ResumeModal />
+      <body className="font-sans bg-background text-foreground antialiased">
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          <StatusBanner />
+          <ScrollProgress />
+          <LenisProvider>
+            <PageTransition>{children}</PageTransition>
+          </LenisProvider>
+          <ChatRoot />
+          <QuickDock />
+          <ResumeModal />
+        </ThemeProvider>
         <Analytics />
         <SpeedInsights />
       </body>

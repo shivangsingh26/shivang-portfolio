@@ -19,8 +19,13 @@ export function AuroraBg() {
           position: absolute;
           border-radius: 50%;
           filter: blur(96px);
-          opacity: 0.32;
+          opacity: 0.18;
           will-change: transform;
+          mix-blend-mode: normal;
+        }
+        /* Dark theme: brighter, screen-blended glow. */
+        :global(.dark) .aurora-blob {
+          opacity: 0.3;
           mix-blend-mode: screen;
         }
         .aurora-blob-1 {
@@ -38,7 +43,6 @@ export function AuroraBg() {
           top: -10vh;
           background: radial-gradient(circle, oklch(0.68 0.16 254) 0%, transparent 70%);
           animation: drift-2 32s ease-in-out infinite alternate;
-          opacity: 0.28;
         }
         .aurora-blob-3 {
           width: 65vw;
@@ -47,7 +51,6 @@ export function AuroraBg() {
           bottom: -30vh;
           background: radial-gradient(circle, oklch(0.60 0.16 275) 0%, transparent 70%);
           animation: drift-3 34s ease-in-out infinite alternate;
-          opacity: 0.22;
         }
         .aurora-blob-4 {
           width: 50vw;
@@ -56,7 +59,6 @@ export function AuroraBg() {
           bottom: -20vh;
           background: radial-gradient(circle, oklch(0.66 0.14 240) 0%, transparent 70%);
           animation: drift-4 30s ease-in-out infinite alternate;
-          opacity: 0.20;
         }
         @keyframes drift-1 {
           from { transform: translate(0, 0) scale(1); }

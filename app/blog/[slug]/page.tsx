@@ -118,7 +118,7 @@ export default async function BlogPost({ params }: Props) {
             className="mt-12 h-px w-full"
             style={{
               background:
-                "linear-gradient(90deg, transparent, oklch(1 0 0 / 0.10) 30%, oklch(0.68 0.16 254 / 0.4) 50%, oklch(1 0 0 / 0.10) 70%, transparent)",
+                "linear-gradient(90deg, transparent, color-mix(in oklch, var(--foreground) 10%, transparent) 30%, color-mix(in oklch, var(--primary) 45%, transparent) 50%, color-mix(in oklch, var(--foreground) 10%, transparent) 70%, transparent)",
             }}
           />
 

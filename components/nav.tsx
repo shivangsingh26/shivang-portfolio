@@ -10,6 +10,7 @@ import { dispatchOpenPalette } from "@/lib/events";
 import { dispatchOpenResume } from "@/components/resume-modal";
 import { track } from "@/lib/telemetry";
 import { LiveClock } from "@/components/effects/live-clock";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -54,7 +55,7 @@ export function Nav() {
           className={cn(
             "flex w-full items-center justify-between rounded-full backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
             scrolled
-              ? "border border-border bg-background/75 px-3.5 py-1.5 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.6),0_0_0_1px_oklch(1_0_0_/_0.04)_inset]"
+              ? "border border-border bg-background/75 px-3.5 py-1.5 shadow-[var(--shadow-cinema)]"
               : "border border-transparent bg-background/30 px-4 py-2"
           )}
         >
@@ -97,6 +98,7 @@ export function Nav() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <button
               type="button"
               onClick={dispatchOpenPalette}

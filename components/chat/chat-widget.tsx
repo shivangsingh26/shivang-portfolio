@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import Link from "next/link";
 import { profile } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { track } from "@/lib/telemetry";
@@ -25,6 +26,28 @@ const SUGGESTIONS = [
   "Why should I hire you?",
   "What's Dossier about?",
 ];
+
+// Deterministic citations: link known entities mentioned in an answer to the
+// relevant case study / section. Reliable — no model-side protocol needed.
+const SOURCE_LINKS: { match: RegExp; label: string; href: string }[] = [
+  { match: /bodhi\s*atomize/i, label: "Bodhi Atomize", href: "/#experience" },
+  { match: /dossier/i, label: "Dossier", href: "/work/dossier" },
+  { match: /fedfv|finger[-\s]?vein|federated/i, label: "FedFV-CV", href: "/work/fedfv-cv" },
+  { match: /slack\s*agent/i, label: "slackAgent", href: "/work/slack-agent" },
+  { match: /rag[-\s]?qa|bedrock|llama\s*3/i, label: "RAG-QA on AWS", href: "/work/rag-qa-aws" },
+];
+
+function citationsFor(text: string): { label: string; href: string }[] {
+  const seen = new Set<string>();
+  const out: { label: string; href: string }[] = [];
+  for (const s of SOURCE_LINKS) {
+    if (s.match.test(text) && !seen.has(s.label)) {
+      seen.add(s.label);
+      out.push({ label: s.label, href: s.href });
+    }
+  }
+  return out;
+}
 
 const FOLLOWUPS: Record<string, string[]> = {
   default: [
@@ -59,7 +82,7 @@ function MessageMarkdown({ text }: { text: string }) {
           const isBlock = className?.startsWith("language-");
           if (isBlock) {
             return (
-              <code className="my-2 block overflow-x-auto rounded-lg border border-border bg-[oklch(0.07_0_0)] p-2.5 font-mono text-[12px] leading-relaxed text-foreground">
+              <code className="my-2 block overflow-x-auto rounded-lg border border-border bg-secondary p-2.5 font-mono text-[12px] leading-relaxed text-foreground">
                 {children}
               </code>
             );
@@ -191,11 +214,11 @@ export function ChatWidget({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.9 }}
             transition={{ delay: 1.5, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="pointer-events-none fixed bottom-[5.75rem] right-5 z-40 hidden items-center gap-1.5 rounded-full border border-border bg-background/90 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-foreground backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.4)] sm:bottom-[6.5rem] sm:right-6 sm:flex"
+            className="pointer-events-none fixed bottom-[5.75rem] right-5 z-40 hidden items-center gap-1.5 rounded-full border border-border bg-background/90 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-foreground backdrop-blur-xl shadow-[var(--shadow-cinema-hover)] sm:bottom-[6.5rem] sm:right-6 sm:flex"
           >
             <span className="relative inline-flex h-1.5 w-1.5">
-              <span className="absolute inset-0 animate-ping rounded-full bg-[var(--coral)] opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[var(--coral)]" />
+              <span className="absolute inset-0 animate-ping rounded-full bg-primary opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
             </span>
             ask my AI
           </motion.div>
@@ -208,8 +231,8 @@ export function ChatWidget({
           aria-hidden
           className="pointer-events-none fixed bottom-5 right-5 z-40 h-14 w-14 sm:bottom-6 sm:right-6"
         >
-          <span className="absolute inset-0 animate-ping rounded-full bg-gradient-to-tr from-[var(--violet)] via-[var(--primary)] to-[var(--coral)] opacity-30" style={{ animationDuration: "2.8s" }} />
-          <span className="absolute -inset-1 rounded-full bg-gradient-to-tr from-[var(--violet)]/30 via-[var(--primary)]/30 to-[var(--coral)]/30 blur-md" />
+          <span className="absolute inset-0 animate-ping rounded-full bg-gradient-to-tr from-[var(--primary)] to-[var(--violet)] opacity-30" style={{ animationDuration: "2.8s" }} />
+          <span className="absolute -inset-1 rounded-full bg-gradient-to-tr from-[var(--primary)]/30 to-[var(--violet)]/30 blur-md" />
         </div>
       )}
 
@@ -221,9 +244,9 @@ export function ChatWidget({
         }}
         aria-label="Open chat with Shivang's AI"
         data-cursor="hover"
-        className="group fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center overflow-hidden rounded-full border border-border bg-foreground text-background shadow-[0_8px_30px_rgba(0,0,0,0.5)] transition hover:scale-105 sm:bottom-6 sm:right-6"
+        className="group fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center overflow-hidden rounded-full border border-border bg-foreground text-background shadow-[var(--shadow-cinema-hover)] transition hover:scale-105 sm:bottom-6 sm:right-6"
       >
-        <span className="absolute inset-0 -z-10 bg-gradient-to-tr from-[var(--violet)] via-[var(--primary)] to-[var(--coral)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+        <span className="absolute inset-0 -z-10 bg-gradient-to-tr from-[var(--primary)] to-[var(--violet)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
         <AnimatePresence mode="wait" initial={false}>
           {open ? (
             <motion.span
@@ -256,7 +279,7 @@ export function ChatWidget({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.96 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed bottom-24 right-4 z-50 flex h-[min(680px,82vh)] w-[min(440px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-border bg-background/95 shadow-[0_24px_60px_rgba(0,0,0,0.6)] backdrop-blur-xl sm:right-6"
+            className="fixed bottom-24 right-4 z-50 flex h-[min(680px,82vh)] w-[min(440px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-border bg-background/95 shadow-[var(--shadow-cinema-hover)] backdrop-blur-xl sm:right-6"
           >
             <div className="relative flex items-center justify-between border-b border-border p-4">
               <div
@@ -264,7 +287,7 @@ export function ChatWidget({
                 className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--primary)]/60 to-transparent"
               />
               <div className="flex items-center gap-3">
-                <div className="relative grid h-8 w-8 place-items-center overflow-hidden rounded-full bg-gradient-to-tr from-[var(--violet)] via-[var(--primary)] to-[var(--coral)]">
+                <div className="relative grid h-8 w-8 place-items-center overflow-hidden rounded-full bg-gradient-to-tr from-[var(--primary)] to-[var(--violet)]">
                   <Sparkles className="h-4 w-4 text-background" />
                 </div>
                 <div>
@@ -317,7 +340,7 @@ export function ChatWidget({
                     className={cn("group/msg flex gap-2", m.role === "user" ? "justify-end" : "justify-start")}
                   >
                     {m.role !== "user" && (
-                      <div className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gradient-to-tr from-[var(--violet)] via-[var(--primary)] to-[var(--coral)]">
+                      <div className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gradient-to-tr from-[var(--primary)] to-[var(--violet)]">
                         <Sparkles className="h-3 w-3 text-background" />
                       </div>
                     )}
@@ -332,6 +355,23 @@ export function ChatWidget({
                       >
                         {m.role === "assistant" ? <MessageMarkdown text={text} /> : <span className="whitespace-pre-wrap">{text}</span>}
                       </div>
+                      {m.role === "assistant" && text && status !== "streaming" && citationsFor(text).length > 0 && (
+                        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                          <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/70">
+                            Sources
+                          </span>
+                          {citationsFor(text).map((c) => (
+                            <Link
+                              key={c.label}
+                              href={c.href}
+                              onClick={() => onOpenChange(false)}
+                              className="inline-flex items-center gap-1 rounded-full border border-border bg-secondary px-2 py-0.5 font-mono text-[10px] text-muted-foreground transition hover:border-[var(--primary)]/40 hover:text-[var(--primary)]"
+                            >
+                              {c.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                       {m.role === "assistant" && text && (
                         <div className="mt-1 flex justify-end opacity-0 transition-opacity group-hover/msg:opacity-100">
                           <CopyButton text={text} />

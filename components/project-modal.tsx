@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Github, ArrowUpRight, Zap, Cpu, Gauge } from "lucide-react";
+import { X, Github, ArrowUpRight, ArrowRight } from "lucide-react";
 import type { Project } from "@/lib/data";
 
 type Props = { project: Project | null; onClose: () => void };
@@ -40,14 +41,14 @@ export function ProjectModal({ project, onClose }: Props) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-x-3 top-[5vh] z-[130] mx-auto max-h-[90vh] w-[min(960px,calc(100vw-1.5rem))] overflow-y-auto rounded-3xl border border-border bg-card/95 backdrop-blur-xl shadow-[0_30px_80px_rgba(0,0,0,0.6)]"
+            className="fixed inset-x-3 top-[5vh] z-[130] mx-auto max-h-[90vh] w-[min(960px,calc(100vw-1.5rem))] overflow-y-auto rounded-3xl border border-border bg-card/95 backdrop-blur-xl shadow-[var(--shadow-cinema-hover)]"
           >
             <div
               aria-hidden
-              className="absolute -inset-px -z-10 rounded-3xl opacity-50"
+              className="absolute -inset-px -z-10 rounded-3xl opacity-60"
               style={{
                 background:
-                  "radial-gradient(800px circle at 50% 0%, oklch(0.72 0.20 250 / 0.18), transparent 60%)",
+                  "radial-gradient(800px circle at 50% 0%, color-mix(in oklch, var(--primary) 18%, transparent), transparent 60%)",
               }}
             />
             <button
@@ -60,77 +61,65 @@ export function ProjectModal({ project, onClose }: Props) {
             </button>
 
             <div className="p-6 sm:p-10">
-              <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                Case study
+              <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                <span>Case study</span>
+                {project.caseStudy?.role && (
+                  <>
+                    <span className="text-muted-foreground/40">·</span>
+                    <span>{project.caseStudy.role}</span>
+                  </>
+                )}
               </div>
               <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight sm:text-5xl">
                 {project.name}
               </h2>
               <p className="mt-2 text-base text-[var(--primary)]">{project.tagline}</p>
 
-              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                <div className="rounded-2xl border border-border/60 bg-background/50 p-4">
-                  <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                    <Zap className="h-3 w-3 text-[var(--amber)]" /> Headline
+              {/* Real results */}
+              <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {(project.caseStudy?.results ?? [project.metric]).map((r) => (
+                  <div key={r.label} className="rounded-2xl border border-border bg-secondary/60 p-4">
+                    <div className="font-display text-xl font-semibold tracking-tight text-[var(--primary)] sm:text-2xl">
+                      {r.value}
+                    </div>
+                    <div className="mt-1 text-xs leading-snug text-muted-foreground">
+                      {r.label}
+                    </div>
                   </div>
-                  <div className="mt-2 font-display text-2xl font-semibold tracking-tight">
-                    <span className="gradient-text">{project.metric.value}</span>
-                  </div>
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    {project.metric.label}
-                  </div>
-                </div>
-                <div className="rounded-2xl border border-border/60 bg-background/50 p-4">
-                  <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                    <Cpu className="h-3 w-3 text-[var(--violet)]" /> Stack depth
-                  </div>
-                  <div className="mt-2 font-display text-2xl font-semibold tracking-tight">
-                    {project.stack.length}
-                  </div>
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    components in pipeline
-                  </div>
-                </div>
-                <div className="rounded-2xl border border-border/60 bg-background/50 p-4">
-                  <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                    <Gauge className="h-3 w-3 text-[var(--coral)]" /> Status
-                  </div>
-                  <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono text-[11px] text-emerald-400">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> shipping
-                  </div>
-                  <div className="mt-2 text-xs text-muted-foreground">production traffic</div>
-                </div>
+                ))}
               </div>
 
-              <div className="mt-8 grid gap-8 md:grid-cols-2">
-                <section>
-                  <h3 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-                    Problem
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-foreground/90">
-                    {project.description}
-                  </p>
-                </section>
-                <section>
+              <section className="mt-8">
+                <h3 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+                  The problem
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-foreground/90 sm:text-[15px]">
+                  {project.caseStudy?.problem ?? project.description}
+                </p>
+              </section>
+
+              {project.caseStudy?.approach && (
+                <section className="mt-8">
                   <h3 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
                     Approach
                   </h3>
-                  <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
-                    <li className="flex gap-2">
-                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
-                      Designed multi-stage pipeline with backpressure + retry
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[var(--violet)]" />
-                      Token-budgeted LLM calls with structured Pydantic output
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[var(--coral)]" />
-                      KEDA-autoscaled microservices on Kubernetes
-                    </li>
-                  </ul>
+                  <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                    {project.caseStudy.approach.map((a, i) => (
+                      <div key={a.title} className="rounded-2xl border border-border bg-secondary/40 p-4">
+                        <div className="flex items-center gap-2.5">
+                          <span className="grid h-7 w-7 place-items-center rounded-full border border-border bg-card font-mono text-[11px] text-[var(--primary)]">
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          <h4 className="text-sm font-semibold tracking-tight">{a.title}</h4>
+                        </div>
+                        <p className="mt-2.5 text-[13px] leading-relaxed text-muted-foreground">
+                          {a.detail}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </section>
-              </div>
+              )}
 
               <section className="mt-8">
                 <h3 className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
@@ -140,7 +129,7 @@ export function ProjectModal({ project, onClose }: Props) {
                   {project.stack.map((s) => (
                     <span
                       key={s}
-                      className="rounded-md border border-border/60 bg-background/50 px-2 py-1 font-mono text-[10px] text-muted-foreground"
+                      className="rounded-md border border-border bg-secondary/50 px-2 py-1 font-mono text-[10px] text-muted-foreground"
                     >
                       {s}
                     </span>
@@ -148,21 +137,30 @@ export function ProjectModal({ project, onClose }: Props) {
                 </div>
               </section>
 
-              {project.github && (
-                <div className="mt-10 flex flex-wrap items-center gap-3">
+              <div className="mt-10 flex flex-wrap items-center gap-3">
+                <Link
+                  href={`/work/${project.slug}`}
+                  data-cursor="hover"
+                  onClick={onClose}
+                  className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background transition hover:opacity-90"
+                >
+                  Read full case study
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </Link>
+                {project.github && (
                   <a
                     href={project.github}
                     target="_blank"
                     rel="noreferrer"
                     data-cursor="hover"
-                    className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background"
+                    className="group inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-5 py-3 text-sm font-medium backdrop-blur transition hover:border-foreground/40"
                   >
                     <Github className="h-4 w-4" />
                     View source
                     <ArrowUpRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </a>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </motion.div>
         </>

@@ -192,7 +192,7 @@ export function CommandPalette({ onOpenChat }: { onOpenChat: () => void }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.98 }}
               transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed left-1/2 top-[12vh] z-[90] w-[min(560px,calc(100vw-2rem))] -translate-x-1/2 overflow-hidden rounded-2xl border border-border/60 glass shadow-[0_30px_80px_rgba(0,0,0,0.6)]"
+              className="fixed left-1/2 top-[12vh] z-[90] w-[min(560px,calc(100vw-2rem))] -translate-x-1/2 overflow-hidden rounded-2xl border border-border/60 glass shadow-[var(--shadow-cinema-hover)]"
               role="dialog"
               aria-modal
             >

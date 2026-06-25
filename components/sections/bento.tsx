@@ -126,10 +126,10 @@ export function Bento() {
                   style={{
                     background:
                       i % 3 === 0
-                        ? "oklch(0.66 0.18 254 / 0.8)"
+                        ? "color-mix(in oklch, var(--primary) 80%, transparent)"
                         : i % 2 === 0
-                        ? "oklch(0.66 0.18 254 / 0.4)"
-                        : "oklch(1 0 0 / 0.06)",
+                        ? "color-mix(in oklch, var(--primary) 42%, transparent)"
+                        : "color-mix(in oklch, var(--foreground) 9%, transparent)",
                   }}
                 />
               ))}

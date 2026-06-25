@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "motion/react";
 import { cn } from "@/lib/utils";
 import { profile } from "@/lib/data";
+import { ThemeToggle } from "@/components/theme-toggle";
 
-export function BlogNav() {
+export function BlogNav({ suffix = "blog" }: { suffix?: string } = {}) {
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
   const [scrolled, setScrolled] = useState(false);
@@ -34,7 +35,7 @@ export function BlogNav() {
           className={cn(
             "flex w-full items-center justify-between rounded-full backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
             scrolled
-              ? "border border-border bg-background/75 px-3.5 py-1.5 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.6),0_0_0_1px_oklch(1_0_0_/_0.04)_inset]"
+              ? "border border-border bg-background/75 px-3.5 py-1.5 shadow-[var(--shadow-cinema-hover)]"
               : "border border-transparent bg-background/30 px-4 py-2"
           )}
         >
@@ -51,10 +52,11 @@ export function BlogNav() {
               {profile.firstName.toLowerCase()}.
             </span>
             <span className="text-muted-foreground transition-colors group-hover:text-foreground">
-              /blog
+              /{suffix}
             </span>
           </Link>
           <nav className="flex items-center gap-1">
+            <ThemeToggle className="mr-1" />
             <Link
               href="/"
               data-cursor="hover"

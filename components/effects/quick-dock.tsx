@@ -100,7 +100,7 @@ export function QuickDock() {
                 duration: 0.25,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="group flex items-center gap-3 rounded-full border border-border bg-card/80 px-3 py-2 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition hover:border-foreground/40"
+              className="group flex items-center gap-3 rounded-full border border-border bg-card/80 px-3 py-2 backdrop-blur-xl shadow-[var(--shadow-cinema-hover)] transition hover:border-foreground/40"
             >
               <span
                 className="grid h-6 w-6 place-items-center rounded-full"
@@ -123,7 +123,7 @@ export function QuickDock() {
         data-cursor="hover"
         whileTap={{ scale: 0.92 }}
         animate={{ rotate: open ? 180 : 0 }}
-        className="grid h-12 w-12 place-items-center rounded-full border border-border bg-card/80 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] transition hover:border-foreground/40"
+        className="grid h-12 w-12 place-items-center rounded-full border border-border bg-card/80 backdrop-blur-xl shadow-[var(--shadow-cinema-hover)] transition hover:border-foreground/40"
       >
         <span
           aria-hidden

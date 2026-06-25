@@ -38,34 +38,13 @@ export function AIConcierge() {
         </Reveal>
 
         <div className="cinema-card relative mt-8 overflow-hidden rounded-3xl backdrop-blur">
-          {/* tamed conic border — violet/primary only */}
-          <div aria-hidden className="pointer-events-none absolute inset-0 rounded-3xl">
-            <div
-              className="absolute -inset-px rounded-3xl opacity-40"
-              style={{
-                background:
-                  "conic-gradient(from 0deg, oklch(0.68 0.16 254 / 0.5), oklch(0.70 0.18 295 / 0.5), oklch(0.68 0.16 254 / 0.3), oklch(0.70 0.18 295 / 0.5), oklch(0.68 0.16 254 / 0.5))",
-                animation: "spin 18s linear infinite",
-              }}
-            />
-            <div className="absolute inset-[1px] rounded-3xl bg-background/95" />
-          </div>
-
-          {/* inner glow blobs — primary/violet */}
+          {/* Single restrained indigo glow */}
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full opacity-35 blur-3xl"
+            className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full opacity-50 blur-3xl"
             style={{
               background:
-                "radial-gradient(circle, oklch(0.70 0.18 295 / 0.45), transparent 70%)",
-            }}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -left-20 -bottom-20 h-56 w-56 rounded-full opacity-30 blur-3xl"
-            style={{
-              background:
-                "radial-gradient(circle, oklch(0.68 0.16 254 / 0.5), transparent 70%)",
+                "radial-gradient(circle, color-mix(in oklch, var(--primary) 22%, transparent), transparent 70%)",
             }}
           />
 
@@ -86,7 +65,7 @@ export function AIConcierge() {
                 <SplitTextSegmented
                   segments={[
                     { text: "Don't read the resume." },
-                    { text: " Talk to it.", className: "text-[var(--violet)]" },
+                    { text: " Talk to it.", className: "text-[var(--primary)]" },
                   ]}
                 />
               </h2>
@@ -104,7 +83,7 @@ export function AIConcierge() {
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.97 }}
                   data-cursor="hover"
-                  className="group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-tr from-[var(--violet)] to-[var(--primary)] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[var(--violet)]/25 transition hover:shadow-[var(--violet)]/50 hover:brightness-110"
+                  className="group relative inline-flex items-center gap-2 rounded-full bg-gradient-to-tr from-[var(--primary)] to-[var(--violet)] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[var(--primary)]/25 transition hover:shadow-[var(--primary)]/50 hover:brightness-110"
                 >
                   <Sparkles className="h-4 w-4" />
                   Start chatting

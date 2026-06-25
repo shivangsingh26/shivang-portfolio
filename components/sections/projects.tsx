@@ -17,7 +17,7 @@ function ProjectCard({ p, idx, onOpen }: { p: Project; idx: number; onOpen: (p: 
   const mx = useMotionValue(50);
   const my = useMotionValue(50);
   const bg = useTransform([mx, my], ([x, y]) =>
-    `radial-gradient(380px circle at ${x}% ${y}%, oklch(0.72 0.20 250 / 0.18), transparent 60%)`
+    `radial-gradient(380px circle at ${x}% ${y}%, color-mix(in oklch, var(--primary) 16%, transparent), transparent 60%)`
   );
 
   const handle = (e: React.MouseEvent<HTMLDivElement>) => {
